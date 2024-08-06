@@ -12,20 +12,6 @@ class Navigation(ft.Column):
     def __init__(self, page):
         super().__init__()
         self.page = page
-
-        self.routes = {
-            '0': HomePage,
-            '1': HistoryPage,
-            '2': ImagePage,
-            '3': GalleryPage,
-            '4': SettingsPage,
-            '5': DevPage,
-            # '6': LogsPage,
-        }
-
-        self.page.on_route_change = self.on_route_change
-        self.page.go('0')
-
         self.cupertino_navigation_bar = ft.NavigationBar(
             bgcolor=ft.cupertino_colors.ON_PRIMARY,
             on_change=lambda e: self.on_route_change(e),
@@ -41,6 +27,18 @@ class Navigation(ft.Column):
             ],
 
         )
+        self.routes = {
+            '0': HomePage,
+            '1': HistoryPage,
+            '2': ImagePage,
+            '3': GalleryPage,
+            '4': SettingsPage,
+            '5': DevPage,
+            # '6': LogsPage,
+        }
+
+        self.page.on_route_change = self.on_route_change
+        self.page.go('0')
 
     def on_route_change(self, e):
         # print(e.__dict__)
