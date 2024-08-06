@@ -18,7 +18,7 @@ class MyApp:
         page.appbar = ft.CupertinoAppBar(
             leading=ft.Icon(ft.icons.GPP_MAYBE),
             bgcolor=ft.cupertino_colors.ON_PRIMARY,
-            middle=ft.Text("CupertinoAppBar Example"),
+            middle=ft.Text("Chat GPT by SNTRK"),
         )
 
     def set_theme(self):
