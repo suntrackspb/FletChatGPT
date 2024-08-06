@@ -30,7 +30,10 @@ class SettingsPage(ft.Column):
             options=[],
         )
         self.c = ft.Switch(label="Light theme", on_change=self.theme_changed)
-        self.dev_switch = ft.Switch(label="DEV Mode", on_change=self.dev_mode_switch)
+        self.dev_switch = ft.Switch(label="DEV Mode",
+                                    disabled=bool(not self.page.client_storage.get('DEV_MODE')),
+                                    on_change=self.dev_mode_switch
+                                    )
         self.cupertino_alert_dialog = ft.CupertinoAlertDialog(
             title=ft.Text("Complete"),
             content=ft.Text("Settings was been saved to storage!"),
@@ -50,7 +53,7 @@ class SettingsPage(ft.Column):
         self.api_model.value = self.page.client_storage.get('MODEL')
         self.img_key.value = self.page.client_storage.get('IMG_KEY')
         self.img_secret.value = self.page.client_storage.get('IMG_SECRET')
-        self.dev_switch.value = self.page.client_storage.get('DEV_MODE')
+        self.dev_switch.value = bool(self.page.client_storage.get('DEV_MODE'))
 
     def on_click_save(self, e):
         self.page.client_storage.set('API_KEY', self.api_key.value)
@@ -106,7 +109,7 @@ class SettingsPage(ft.Column):
         self.page.update()
 
     def dev_mode_switch(self, e):
-        self.page.client_storage.set('DEV_MODE', str(self.dev_switch.value))
+        self.page.client_storage.set('DEV_MODE', int(self.dev_switch.value))
         self.dev_switch.label = (
             "DEV ON" if self.dev_switch.value else "DEV OFF"
         )

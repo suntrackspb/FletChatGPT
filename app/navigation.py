@@ -8,7 +8,7 @@ from app.pages.DevPage import DevPage
 from app.pages.LogsPage import LogsPage
 
 
-def get_destinations(mode: str):
+def get_destinations(mode: int):
     destinations = [
         ft.NavigationDestination(icon=ft.icons.CHAT, label="Chat"),
         ft.NavigationDestination(icon=ft.icons.HISTORY, label="History"),
@@ -16,7 +16,7 @@ def get_destinations(mode: str):
         ft.NavigationDestination(icon=ft.icons.IMAGE_SEARCH, label="Gallery"),
         ft.NavigationDestination(icon=ft.icons.SETTINGS, label="Settings"),
     ]
-    if mode == 'True':
+    if mode:
         destinations.append(
             ft.NavigationDestination(icon=ft.icons.DEVELOPER_MODE, label="DEV")
         )
@@ -30,6 +30,7 @@ class Navigation(ft.Column):
     def __init__(self, page):
         super().__init__()
         self.page = page
+        self.count = 0
         self.mode = self.page.client_storage.get('DEV_MODE')
         self.destinations = get_destinations(self.mode)
 
@@ -38,7 +39,6 @@ class Navigation(ft.Column):
             on_change=lambda e: self.on_route_change(e),
             elevation=10,
             destinations=self.destinations,
-
         )
         self.routes = {
             '0': HomePage,
@@ -54,8 +54,16 @@ class Navigation(ft.Column):
         self.page.go('0')
 
     def on_route_change(self, e):
-        # print(e.__dict__)
         route = e.data
+        if route == '4':  # Settings page
+            self.count += 1
+            if self.count >= 10 and self.mode == 0:
+                self.mode = 1
+                self.page.client_storage.set('DEV_MODE', 1)
+                self.destinations = get_destinations(self.mode)
+                self.cupertino_navigation_bar.destinations = self.destinations
+                self.count = 0  # Reset count after enabling DEV Mode
+
         self.page.controls.clear()
         self.page.controls.append(self.cupertino_navigation_bar)
         self.page.controls.append(self.routes[route](self.page, self.on_route_change).get_view())
