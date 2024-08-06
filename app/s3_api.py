@@ -31,5 +31,5 @@ class S3Api:
     def delete(self, key: str):
         return self.client.delete_object(Bucket=self.s3_bucket, Key=key)
 
-    def upload(self):
-        return self.client.upload_file('/tmp/hello.txt', 'mybucket', 'hello.txt')
+    def upload(self, file_path: str, key: str):
+        return self.client.upload_file(Filename=file_path, Bucket=self.s3_bucket, Key=key)

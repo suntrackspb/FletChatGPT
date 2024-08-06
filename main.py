@@ -5,7 +5,7 @@ from app.navigation import Navigation
 class MyApp:
     def __init__(self, page: ft.Page):
         self.page = page
-        # self.page.adaptive = True
+        self.page.adaptive = True
         self.page.title = "SNTRK GPT"
         self.page.theme_mode = self.set_theme()
         self.page.theme = ft.Theme(color_scheme=ft.ColorScheme(primary=ft.colors.PRIMARY))
