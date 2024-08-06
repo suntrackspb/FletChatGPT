@@ -26,6 +26,11 @@ class DevPage(ft.Column):
             text="Run",
             on_click=self.on_click_run
         )
+        self.storage_values = ft.Column()
+        self.get_storage = ft.ElevatedButton(
+            text="Get Values",
+            on_click=self.on_click_get_storage
+        )
         self.on_load()
 
     def on_load(self):
@@ -38,6 +43,14 @@ class DevPage(ft.Column):
                 size = round(f.size / (1024 ** 2), 2)
                 self.files.controls.append(ft.Row([ft.Text(f.path), ft.Text(f'{size} Mb')]))
         self.page.update()
+
+    def on_click_get_storage(self, e):
+        keys = self.page.client_storage.get_keys("")
+        for key in keys:
+            self.storage_values.controls.append(ft.Row([ft.Text(f"Key: {key}, Value: {self.page.client_storage.get(key)}")]))
+
+        self.page.update()
+
 
     def on_click_run(self, e):
         current_os = platform.system()
@@ -71,6 +84,8 @@ class DevPage(ft.Column):
                                 icon=ft.icons.FOLDER_OPEN,
                                 on_click=lambda _: self.file_picker.pick_files(allow_multiple=True),
                             ),
+                            self.storage_values,
+                            self.get_storage
                         ]
                     ),
                     ft.Row(
