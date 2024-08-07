@@ -1,7 +1,7 @@
 import flet as ft
 
 
-class LogsPage(ft.Column):
+class LogsPage(ft.View):
     def __init__(self, page, on_route_change):
         super().__init__()
         self.page = page

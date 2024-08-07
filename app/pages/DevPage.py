@@ -3,7 +3,7 @@ import platform
 import flet as ft
 
 
-class DevPage(ft.Column):
+class DevPage(ft.View):
     def __init__(self, page, on_route_change):
         super().__init__()
         self.page = page

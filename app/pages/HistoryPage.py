@@ -11,7 +11,6 @@ class HistoryPage(ft.Container):
         self.content = self.chats
         self.on_load()
 
-
     def on_load(self):
         self.chats.controls.clear()
         chats = self.page.client_storage.get_keys('msg')
@@ -66,7 +65,8 @@ class HistoryPage(ft.Container):
         e.data = '0'
         self.page.data = e.control.data
         self.page.navigation_bar.selected_index = 0
-        self.on_route_change(e)
+        self.page.go("/home")
+        # self.on_route_change(e)
         self.update()
         self.close_cupertino_action_sheet(e)
 

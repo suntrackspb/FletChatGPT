@@ -10,8 +10,8 @@ messages = []
 chat_id = uuid.uuid4()
 
 
-class HomePage(ft.Container):
-    def __init__(self, page: ft.Page):
+class HomePage(ft.Column):
+    def __init__(self, page):
         super().__init__()
         self.page = page
         self.page.title = "Chat"
@@ -31,31 +31,6 @@ class HomePage(ft.Container):
         page.fonts = {
             "Roboto Mono": "RobotoMono-VariableFont_wght.ttf",
         }
-
-        self.content = ft.Column(
-            [
-                ft.Column(
-                    [
-                        ft.Container(
-                            self.msg_view,
-                        ),
-                    ],
-                    expand=True,
-                    scroll=ft.ScrollMode.HIDDEN,
-                ),
-                ft.Container(
-                    ft.Row(
-                        [
-                            self.search,
-                            self.search_btn,
-                            self.clear_btn,
-                        ],
-                    ),
-                ),
-            ],
-            # expand=True,
-            alignment=ft.MainAxisAlignment.END
-        )
 
         self.on_load()
 
@@ -119,3 +94,29 @@ class HomePage(ft.Container):
         self.page.update()
         self.search.focus()
         self.page.client_storage.set(f'msg-{chat_id}', messages)
+
+    def get_view(self):
+        return ft.Column(
+            [
+                ft.Column(
+                    [
+                        ft.Container(
+                            self.msg_view,
+                        ),
+                    ],
+                    expand=True,
+                    scroll=ft.ScrollMode.HIDDEN,
+                ),
+                ft.Container(
+                    ft.Row(
+                        [
+                            self.search,
+                            self.search_btn,
+                            self.clear_btn,
+                        ],
+                    ),
+                ),
+            ],
+            expand=True,
+            alignment=ft.MainAxisAlignment.END
+        )
