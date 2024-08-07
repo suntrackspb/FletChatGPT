@@ -9,53 +9,53 @@ from app.pages.LogsPage import LogsPage
 from app.pages.Test import TestPage
 
 
-def get_destinations(mode: int):
-    destinations = [
-        ft.NavigationBarDestination(icon=ft.icons.CHAT, label="Chat"),
-        ft.NavigationBarDestination(icon=ft.icons.HISTORY, label="History"),
-        ft.NavigationBarDestination(icon=ft.icons.PREVIEW, label="Image"),
-        ft.NavigationBarDestination(icon=ft.icons.IMAGE_SEARCH, label="Gallery"),
-        # ft.NavigationBarDestination(icon=ft.icons.SETTINGS, label="Settings"),
-    ]
-    if mode:
-        destinations.append(
-            ft.NavigationBarDestination(icon=ft.icons.DEVELOPER_MODE, label="DEV")
-        )
-        destinations.append(
-            ft.NavigationBarDestination(icon=ft.icons.FILE_UPLOAD, label="Logs")
-        )
-    return destinations
-
-
 class MyApp:
     def __init__(self, page: ft.Page):
         self.page = page
         self.page.title = "Flet App"
+        self.page.window.width = 500
+        self.page.window.height = 900
         self.page.theme_mode = self.set_theme()
         self.page.theme = ft.Theme(color_scheme=ft.ColorScheme(primary=ft.colors.PRIMARY))
         self.page.on_route_change = self.route_change
         self.appbar = ft.AppBar(
             actions=[
-                ft.IconButton(
-                    icon=ft.icons.SETTINGS,
-                    on_click=lambda _: page.go("/settings"),
-                    padding=10,
+                ft.Container(
+                    content=ft.PopupMenuButton(
+                        items=[
+                            ft.PopupMenuItem(
+                                icon=ft.icons.SETTINGS,
+                                text="Settings",
+                                on_click=lambda _: page.go("/settings")
+                            ),
+                            ft.PopupMenuItem(
+                                icon=ft.icons.DEVELOPER_MODE,
+                                text="Dev",
+                                on_click=lambda _: page.go("/dev")
+                            ),
+                            ft.PopupMenuItem(
+                                icon=ft.icons.FILE_UPLOAD,
+                                text="Logs",
+                                on_click=lambda _: page.go("/logs")
+                            ),
+                        ],
+
+                    ),
+                    padding=ft.padding.only(right=20)
                 )
-                # ft.PopupMenuButton(
-                #     items=[
-                #         ft.PopupMenuItem(
-                #             text="Settings",
-                #             checked=False,
-                #             on_click=lambda _: page.go("/settings")
-                #         ),
-                #     ]
-                # )
             ],
+            title_spacing=20,
             bgcolor=ft.colors.SECONDARY_CONTAINER
         )
 
         self.navigation_bar = ft.NavigationBar(
-            destinations=get_destinations(0),
+            destinations=[
+                ft.NavigationBarDestination(icon=ft.icons.CHAT, label="Chat"),
+                ft.NavigationBarDestination(icon=ft.icons.HISTORY, label="History"),
+                ft.NavigationBarDestination(icon=ft.icons.PREVIEW, label="Image"),
+                ft.NavigationBarDestination(icon=ft.icons.IMAGE_SEARCH, label="Gallery"),
+                # ft.NavigationBarDestination(icon=ft.icons.SETTINGS, label="Settings"),
+            ],
             on_change=lambda e: self.nav_change(e),
             bgcolor=ft.colors.SECONDARY_CONTAINER
         )
@@ -69,7 +69,7 @@ class MyApp:
         if route.route == "/home":
             self.page.views.append(ft.View(route="/home", controls=[
                 self.appbar,
-                HomePage(self.page),
+                HomePage(self.page).get_view(),
                 self.navigation_bar
             ]))
             self.page.appbar.title = ft.Text("Chat GPT")
