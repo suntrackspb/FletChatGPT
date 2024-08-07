@@ -96,48 +96,31 @@ class ImagePage(ft.Container):
         self.container.controls.clear()
         self.container.controls.append(
             ft.Container(
-                content=ft.CupertinoContextMenu(
-                    enable_haptic_feedback=True,
-                    content=ft.Column(
-                        [
-                            ft.Row(
-                                height=30
-                            ),
-                            ft.Image(
-                                src=self.img_url,
-                                # src=f'http://192.168.88.20:9000/sun-public/last_image.png',
-                                fit=ft.ImageFit.CONTAIN,
-                                border_radius=10
-                            ),
-                        ],
-                    ),
-                    actions=[
-                        ft.CupertinoContextMenuAction(
-                            text="Save image",
-                            is_default_action=True,
-                            trailing_icon=ft.icons.CHECK,
-                            on_click=lambda _: self.pick_files_dialog.save_file(
-                                file_name=f"{img_uid}.png",
-                                file_type=ft.FilePickerFileType.IMAGE
-                            ),
-                        ),
-                        ft.CupertinoContextMenuAction(
-                            text="Action 2",
-                            trailing_icon=ft.icons.MORE,
-                            on_click=lambda e: print("Action 2"),
-                        ),
-                        ft.CupertinoContextMenuAction(
-                            text="Delete image",
-                            is_destructive_action=True,
-                            trailing_icon=ft.icons.CANCEL,
-                            on_click=lambda _: self.delete_image(filename=f"{img_uid}.png")
+                content=ft.Column(
+                    [
+                        ft.Row(
+                            [
+                                ft.ElevatedButton(text="Save", icon=ft.icons.SAVE, expand=True,
+                                                  color=ft.colors.ON_PRIMARY, bgcolor=ft.colors.PRIMARY,
+                                                  on_click=lambda _: self.pick_files_dialog.save_file(
+                                                      file_name=f"{img_uid}.png",
+                                                      file_type=ft.FilePickerFileType.IMAGE
+                                                  ), ),
+                                ft.ElevatedButton(text="Reset", icon=ft.icons.CANCEL, expand=True,
+                                                  color=ft.colors.ON_PRIMARY, bgcolor=ft.colors.PRIMARY,
+                                                  on_click=lambda _: self.delete_image(filename=f"{img_uid}.png")),
+                            ]
 
+                        ),
+                        ft.Image(
+                            src=self.img_url,
+                            # src=f'http://192.168.88.20:9000/sun-public/last_image.png',
+                            fit=ft.ImageFit.CONTAIN,
+                            border_radius=10
                         ),
                     ],
                 ),
-                padding=ft.padding.all(10)
             )
-
         )
         self.page.update()
 

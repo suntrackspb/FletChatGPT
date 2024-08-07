@@ -1,6 +1,6 @@
 import flet as ft
 from app.pages.HistoryPage import HistoryPage
-from app.pages.ImagePage import ImagePage
+from app.pages.GenerateImage import ImagePage
 from app.pages.GalleryPage import GalleryPage
 from app.pages.SettingsPage import SettingsPage
 from app.pages.HomePage import HomePage
