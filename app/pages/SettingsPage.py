@@ -14,16 +14,20 @@ class SettingsPage(ft.Container):
         self.page = page
         self.page.title = "Settings"
         self.api_key = ft.TextField(label="API KEY", border_color=ft.colors.PRIMARY,
-                                    expand=True)
+                                    expand=True, password=True)
         self.api_url = ft.TextField(label="API URL", border_color=ft.colors.PRIMARY, expand=True)
 
-        self.img_secret = ft.TextField(label="Fusion Brain Secret", border_color=ft.colors.PRIMARY, expand=True)
-        self.img_key = ft.TextField(label="Fusion Brain Api Key", border_color=ft.colors.PRIMARY, expand=True)
+        self.img_secret = ft.TextField(label="Fusion Brain Secret", border_color=ft.colors.PRIMARY, expand=True,
+                                       password=True)
+        self.img_key = ft.TextField(label="Fusion Brain Api Key", border_color=ft.colors.PRIMARY, expand=True,
+                                    password=True)
 
         self.bucket = ft.TextField(label="Bucket name", border_color=ft.colors.PRIMARY, expand=True)
         self.region_name = ft.TextField(label="Region Name", border_color=ft.colors.PRIMARY, expand=True)
-        self.aws_access_key_id = ft.TextField(label="Access Key Id", border_color=ft.colors.PRIMARY, expand=True)
-        self.aws_secret_key = ft.TextField(label="Secret Key", border_color=ft.colors.PRIMARY, expand=True)
+        self.aws_access_key_id = ft.TextField(label="Access Key Id", border_color=ft.colors.PRIMARY, expand=True,
+                                              password=True)
+        self.aws_secret_key = ft.TextField(label="Secret Key", border_color=ft.colors.PRIMARY, expand=True,
+                                           password=True)
         self.endpoint_url = ft.TextField(label="Endpoint URL", border_color=ft.colors.PRIMARY, expand=True)
         self.api_model = ft.Dropdown(
             label="Select model",
@@ -31,7 +35,7 @@ class SettingsPage(ft.Container):
             expand=True,
             options=[],
         )
-        self.c = ft.Switch(label="Light theme", on_change=self.theme_changed)
+        # self.c = ft.Switch(label="Light theme", on_change=self.theme_changed)
         self.dev_switch = ft.Switch(label="DEV Mode",
                                     disabled=bool(not self.page.client_storage.get('DEV_MODE')),
                                     on_change=self.dev_mode_switch
@@ -122,11 +126,11 @@ class SettingsPage(ft.Container):
                         ft.Divider(),
                         ft.Row(
                             [
-                                ft.Column(
-                                    [
-                                        self.c,
-                                    ]
-                                ),
+                                # ft.Column(
+                                #     [
+                                #         self.c,
+                                #     ]
+                                # ),
                                 ft.Column(
                                     [
                                         self.dev_switch
@@ -182,11 +186,11 @@ class SettingsPage(ft.Container):
         self.api_model.value = ''
         self.img_key.value = ''
         self.img_secret.value = ''
-        self.region_name = ''
-        self.aws_access_key_id = ''
-        self.aws_secret_key = ''
-        self.endpoint_url = ''
-        self.bucket = ''
+        self.region_name.value = ''
+        self.aws_access_key_id.value = ''
+        self.aws_secret_key.value = ''
+        self.endpoint_url.value = ''
+        self.bucket.value = ''
         self.page.client_storage.remove('API_KEY')
         self.page.client_storage.remove('API_URL')
         self.page.client_storage.remove('MODEL')
@@ -223,17 +227,17 @@ class SettingsPage(ft.Container):
         else:
             print(f"Failed to load config. Status code: {response.status_code}")
 
-    def theme_changed(self, e):
-        self.page.theme_mode = (
-            ft.ThemeMode.DARK
-            if self.page.theme_mode == ft.ThemeMode.LIGHT
-            else ft.ThemeMode.LIGHT
-        )
-        self.page.client_storage.set('THEME', str(self.page.theme_mode))
-        self.c.label = (
-            "Light theme" if self.page.theme_mode == ft.ThemeMode.LIGHT else "Dark theme"
-        )
-        self.page.update()
+    # def theme_changed(self, e):
+    #     self.page.theme_mode = (
+    #         ft.ThemeMode.DARK
+    #         if self.page.theme_mode == ft.ThemeMode.LIGHT
+    #         else ft.ThemeMode.LIGHT
+    #     )
+    #     self.page.client_storage.set('THEME', str(self.page.theme_mode))
+    #     self.c.label = (
+    #         "Light theme" if self.page.theme_mode == ft.ThemeMode.LIGHT else "Dark theme"
+    #     )
+    #     self.page.update()
 
     def dev_mode_switch(self, e):
         self.page.client_storage.set('DEV_MODE', int(self.dev_switch.value))
