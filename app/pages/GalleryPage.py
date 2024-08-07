@@ -1,9 +1,8 @@
-import json
-
 import flet as ft
 import requests
 
-from app.s3_api import S3Api
+from app.utils.s3_api import S3Api
+from app.components.ErrorDialog import ErrorDialog
 
 
 class GalleryPage(ft.Container):
@@ -28,9 +27,8 @@ class GalleryPage(ft.Container):
             on_dismiss=lambda e: print("Dialog dismissed!"),
         )
         self.images = ft.GridView(
-            height=self.page.window.height,
-            width=self.page.window.width,
-            runs_count=5,
+            # height=self.page.window.height,
+            # width=self.page.window.width,
             max_extent=150,
             child_aspect_ratio=1.0,
             spacing=5,
@@ -48,6 +46,11 @@ class GalleryPage(ft.Container):
                 print(e)
 
     def on_load(self):
+        is_connect = self.s3.bucket_list()
+        print("TEST:", is_connect)
+        if is_connect['success'] is False:
+            ErrorDialog(self.page, title="S3 Connection Error", message=is_connect['message']).show_dialog()
+            return
         images_list = self.s3.list()
         for image in images_list:
             url = f'http://192.168.88.20:9000/{self.page.client_storage.get("S3_BUCKET")}/{image["Key"]}'
@@ -78,17 +81,20 @@ class GalleryPage(ft.Container):
                 ),
                 ft.IconButton(
                     icon=ft.icons.DOWNLOAD,
-                    top=10,
+                    bottom=10,
                     right=10,
-                    bgcolor=ft.colors.GREY_300,
-                    opacity=0.5,
+                    icon_color=ft.colors.ON_PRIMARY,
+                    hover_color=ft.colors.SECONDARY,
+                    bgcolor=ft.colors.ON_PRIMARY_CONTAINER,
+                    opacity=0.7,
                     on_click=lambda _: self.pick_files_dialog.save_file(
-                                file_name=image_name,
-                                file_type=ft.FilePickerFileType.IMAGE
-                            ),
+                        file_name=image_name,
+                        file_type=ft.FilePickerFileType.IMAGE
+                    ),
 
                 )
-            ]
+            ],
+            expand=True
         )
         e.control.page.dialog = self.dlg
         self.dlg.open = True
