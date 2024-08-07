@@ -153,7 +153,7 @@ class SettingsPage(ft.Container):
             self.api_model.options.append(ft.dropdown.Option(model))
         self.api_key.value = self.page.client_storage.get('API_KEY')
         self.api_url.value = self.page.client_storage.get('API_URL')
-        self.api_model.value = self.page.client_storage.get('MODEL')
+        self.api_model.value = self.page.client_storage.get('GPT_MODEL')
         self.img_key.value = self.page.client_storage.get('IMG_KEY')
         self.img_secret.value = self.page.client_storage.get('IMG_SECRET')
         self.dev_switch.value = bool(self.page.client_storage.get('DEV_MODE'))
@@ -167,7 +167,7 @@ class SettingsPage(ft.Container):
     def on_click_save(self, e):
         self.page.client_storage.set('API_KEY', self.api_key.value)
         self.page.client_storage.set('API_URL', self.api_url.value)
-        self.page.client_storage.set('MODEL', self.api_model.value)
+        self.page.client_storage.set('GPT_MODEL', self.api_model.value)
         self.page.client_storage.set('IMG_KEY', self.img_key.value)
         self.page.client_storage.set('IMG_SECRET', self.img_secret.value)
 
@@ -193,7 +193,7 @@ class SettingsPage(ft.Container):
         self.bucket.value = ''
         self.page.client_storage.remove('API_KEY')
         self.page.client_storage.remove('API_URL')
-        self.page.client_storage.remove('MODEL')
+        self.page.client_storage.remove('GPT_MODEL')
         self.page.client_storage.remove('IMG_KEY')
         self.page.client_storage.remove('IMG_SECRET')
         self.page.client_storage.remove('S3_REGION')
