@@ -113,10 +113,18 @@ class MyApp:
             ], scroll=ft.ScrollMode.HIDDEN))
             self.page.appbar.title = ft.Text("Settings")
 
+        elif route.route == "/dev":
+            self.page.views.append(ft.View(route="/settings", controls=[
+                self.appbar,
+                DevPage(self.page).get_view(),
+                self.navigation_bar
+            ], scroll=ft.ScrollMode.HIDDEN))
+            self.page.appbar.title = ft.Text("Settings")
+
         self.page.update()
 
     def nav_change(self, event):
-        routes = ["/home", "/history", "/image_gen", "/gallery", "/settings"]
+        routes = ["/home", "/history", "/image_gen", "/gallery", "/settings", "/dev"]
         self.page.go(routes[int(event.data)])
 
     def set_theme(self):

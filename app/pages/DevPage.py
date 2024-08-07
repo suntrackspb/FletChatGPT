@@ -4,17 +4,15 @@ import flet as ft
 
 
 class DevPage(ft.View):
-    def __init__(self, page, on_route_change):
+    def __init__(self, page):
         super().__init__()
         self.page = page
-        self.page.title = "History"
-        self.on_route_change = on_route_change
+        self.page.title = "Dev mode"
         self.file_picker = ft.FilePicker(on_result=self.file_picker_result)
         self.page.overlay.append(self.file_picker)
         self.files = ft.Column()
         self.chats = ft.Column(
             expand=True,
-            height=self.page.window.height - 200,
             scroll=ft.ScrollMode.ALWAYS,
         )
         self.command = ft.TextField(
@@ -96,7 +94,6 @@ class DevPage(ft.View):
                     ),
                     ft.Container(
                         content=self.chats,
-                        height=self.page.window.height - 250
                     )
                 ]
             )
