@@ -68,7 +68,6 @@ class MyApp:
         )
         self.page.appbar = self.appbar
         self.page.navigation_bar = self.navigation_bar
-        self.page.on_view_pop = lambda e: print(e)
         self.page.go("/home")
 
     def route_change(self, route):

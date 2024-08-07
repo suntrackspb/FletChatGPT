@@ -1,5 +1,8 @@
 import flet as ft
 from app.main import MyApp
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def main(page: ft.Page):
