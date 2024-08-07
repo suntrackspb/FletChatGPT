@@ -24,7 +24,7 @@ class Text2ImageAPI:
         }
 
     def validate_config(self):
-        if bool(self.api_key) and bool(self.api_secret):
+        if not bool(self.api_key) and not bool(self.api_secret):
             self.api_key = os.getenv('KANDINSKY_KEY')
             self.api_secret = os.getenv('KANDINSKY_SECRET')
 
