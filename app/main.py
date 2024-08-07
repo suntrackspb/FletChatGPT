@@ -18,11 +18,17 @@ class MyApp:
         self.page.theme_mode = self.set_theme()
         self.page.theme = ft.Theme(color_scheme=ft.ColorScheme(primary=ft.colors.PRIMARY))
         self.page.on_route_change = self.route_change
+        self.theme_switcher = ft.PopupMenuItem(
+            icon=ft.icons.SUNNY if self.page.theme_mode == ft.ThemeMode.LIGHT else ft.icons.DARK_MODE,
+            text="Light theme" if self.page.theme_mode == ft.ThemeMode.LIGHT else "Dark theme",
+            on_click=self.theme_changed
+        )
         self.appbar = ft.AppBar(
             actions=[
                 ft.Container(
                     content=ft.PopupMenuButton(
                         items=[
+                            self.theme_switcher,
                             ft.PopupMenuItem(
                                 icon=ft.icons.SETTINGS,
                                 text="Settings",
@@ -38,6 +44,7 @@ class MyApp:
                                 text="Logs",
                                 on_click=lambda _: page.go("/logs")
                             ),
+
                         ],
 
                     ),
@@ -85,7 +92,7 @@ class MyApp:
         elif route.route == "/image_gen":
             self.page.views.append(ft.View(route="/image_gen", controls=[
                 self.appbar,
-                ImagePage(self.page),
+                ImagePage(self.page).get_view(),
                 self.navigation_bar
             ]))
             self.page.appbar.title = ft.Text("Generate Image")
@@ -118,10 +125,18 @@ class MyApp:
                 return ft.ThemeMode.DARK
         return ft.ThemeMode.LIGHT
 
+    def theme_changed(self, e):
+        self.page.theme_mode = (
+            ft.ThemeMode.DARK
+            if self.page.theme_mode == ft.ThemeMode.LIGHT
+            else ft.ThemeMode.LIGHT
+        )
+        if self.page.theme_mode == ft.ThemeMode.LIGHT:
+            self.theme_switcher.text = "Light theme"
+            self.theme_switcher.icon = ft.icons.LIGHT_MODE
+        else:
+            self.theme_switcher.text = "Dark theme"
+            self.theme_switcher.icon = ft.icons.DARK_MODE
 
-def main(page: ft.Page):
-    MyApp(page)
-
-
-ft.app(target=main, assets_dir='assets')
-# ft.app(target=main, assets_dir="assets", view=ft.WEB_BROWSER, host='127.0.0.1', port=8009)
+        self.page.client_storage.set('THEME', str(self.page.theme_mode))
+        self.page.update()
