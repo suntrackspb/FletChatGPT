@@ -1,4 +1,5 @@
 import boto3
+from botocore.exceptions import NoCredentialsError, PartialCredentialsError, ClientError
 
 
 class S3Api:
@@ -21,6 +22,34 @@ class S3Api:
         )
         self.bucket = self.session
         self.s3_bucket = bucket
+
+    def bucket_list(self):
+        try:
+            response = self.client.list_buckets()
+            return {
+                'success': True,
+                'data': [x['Name'] for x in response['Buckets']]
+            }
+        except NoCredentialsError:
+            return {
+                'success': False,
+                'message': 'No credentials found. Please configure your AWS credentials.'
+            }
+        except PartialCredentialsError:
+            return {
+                'success': False,
+                'message': 'Incomplete credentials found. Please check your AWS credentials.'
+            }
+        except ClientError as e:
+            return {
+                'success': False,
+                'message': f"Client error: {e}"
+            }
+        except Exception as e:
+            return {
+                'success': False,
+                'message': f"An error occurred: {e}"
+            }
 
     def put(self, key: str, body: bytes):
         return self.client.put_object(Bucket=self.s3_bucket, Key=key, Body=body, ContentType='image/png')
