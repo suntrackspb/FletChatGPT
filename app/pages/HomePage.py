@@ -2,7 +2,7 @@ from datetime import datetime
 
 import flet as ft
 
-from app.chat_api import OpenAI
+from app.utils.chat_api import OpenAI
 import uuid
 
 

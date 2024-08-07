@@ -3,11 +3,11 @@ import uuid
 
 import flet as ft
 
-from app.image_api import Text2ImageAPI
-from app.s3_api import S3Api
+from app.utils.image_api import Text2ImageAPI
+from app.utils.s3_api import S3Api
 
 
-class ImagePage(ft.View):
+class ImagePage(ft.Container):
     def __init__(self, page):
         super().__init__()
         self.page = page
