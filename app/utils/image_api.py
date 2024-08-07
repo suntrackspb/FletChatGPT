@@ -1,19 +1,32 @@
 import json
+import os
 import time
-import urllib.request
 import urllib.parse
+import urllib.request
 
+import flet as ft
 import requests
 
 
 class Text2ImageAPI:
 
-    def __init__(self, url, api_key, secret_key):
-        self.URL = url
+    def __init__(self, page: ft.Page):
+        self.page = page
+        self.URL = "https://api-key.fusionbrain.ai/"
+        self.api_key = self.page.client_storage.get('IMG_KEY')
+        self.api_secret = self.page.client_storage.get('IMG_SECRET')
+
+        self.validate_config()
+
         self.AUTH_HEADERS = {
-            'X-Key': f'Key {api_key}',
-            'X-Secret': f'Secret {secret_key}',
+            'X-Key': f'Key {self.api_key}',
+            'X-Secret': f'Secret {self.api_secret}',
         }
+
+    def validate_config(self):
+        if bool(self.api_key) and bool(self.api_secret):
+            self.api_key = os.getenv('KANDINSKY_KEY')
+            self.api_secret = os.getenv('KANDINSKY_SECRET')
 
     def get_model(self):
         req = urllib.request.Request(self.URL + 'key/api/v1/models', headers=self.AUTH_HEADERS)
