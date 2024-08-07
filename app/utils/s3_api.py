@@ -1,27 +1,52 @@
+import os
+
+import flet as ft
+
 import boto3
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError, ClientError
 
 
 class S3Api:
-    def __init__(self,
-                 region: str,
-                 access_key: str,
-                 secret_key: str,
-                 endpoint: str,
-                 bucket: str
-                 ):
-        self.session = boto3.Session(
-            profile_name='default'
-        )
-        self.client = self.session.client(
-            service_name='s3',
-            region_name=region,
-            aws_access_key_id=access_key,
-            aws_secret_access_key=secret_key,
-            endpoint_url=endpoint,
-        )
-        self.bucket = self.session
-        self.s3_bucket = bucket
+    def __init__(self, page: ft.Page):
+        self.page = page
+        self.s3_region_name = self.page.client_storage.get('S3_REGION')
+        self.s3_access_token = self.page.client_storage.get('S3_ACCESS')
+        self.s3_secret_token = self.page.client_storage.get('S3_SECRET')
+        self.s3_endpoint_url = self.page.client_storage.get('S3_ENDPOINT')
+        self.s3_bucket_name = self.page.client_storage.get('S3_BUCKET')
+
+        self.session = None
+        self.client = None
+
+        self.validate_config()
+
+    def validate_config(self):
+        if bool(self.s3_region_name) and bool(self.s3_access_token) and bool(self.s3_secret_token) and bool(
+                self.s3_endpoint_url) and bool(self.s3_bucket_name):
+            self.session = boto3.Session(
+                profile_name='default',
+                region_name=self.s3_region_name,
+                aws_access_key_id=self.s3_access_token,
+                aws_secret_access_key=self.s3_secret_token,
+            )
+            self.client = self.session.client(
+                service_name='s3',
+                endpoint_url=self.s3_endpoint_url,
+            )
+            print("CLIENT SETTINGS")
+        else:
+            self.session = boto3.Session(
+                profile_name='default',
+                region_name=os.getenv('S3_REGION_NAME'),
+                aws_access_key_id=os.getenv('S3_ACCESS_KEY'),
+                aws_secret_access_key=os.getenv('S3_SECRET_KEY'),
+            )
+            self.client = self.session.client(
+                service_name='s3',
+                endpoint_url=os.getenv('S3_ENDPOINT_URL'),
+            )
+            self.s3_bucket_name = os.getenv('S3_BUCKET_NAME')
+            print("SERVER SETTINGS")
 
     def bucket_list(self):
         try:
@@ -52,13 +77,13 @@ class S3Api:
             }
 
     def put(self, key: str, body: bytes):
-        return self.client.put_object(Bucket=self.s3_bucket, Key=key, Body=body, ContentType='image/png')
+        return self.client.put_object(Bucket=self.s3_bucket_name, Key=key, Body=body, ContentType='image/png')
 
     def list(self):
-        return self.client.list_objects(Bucket=self.s3_bucket)['Contents']
+        return self.client.list_objects(Bucket=self.s3_bucket_name)['Contents']
 
     def delete(self, key: str):
-        return self.client.delete_object(Bucket=self.s3_bucket, Key=key)
+        return self.client.delete_object(Bucket=self.s3_bucket_name, Key=key)
 
     def upload(self, file_path: str, key: str):
-        return self.client.upload_file(Filename=file_path, Bucket=self.s3_bucket, Key=key)
+        return self.client.upload_file(Filename=file_path, Bucket=self.s3_bucket_name, Key=key)

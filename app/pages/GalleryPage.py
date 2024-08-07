@@ -1,3 +1,5 @@
+import os
+
 import flet as ft
 import requests
 
@@ -10,13 +12,8 @@ class GalleryPage(ft.Container):
         super().__init__()
         self.page = page
         self.page.title = "Gallery"
-        self.s3 = S3Api(
-            region=self.page.client_storage.get('S3_REGION'),
-            access_key=self.page.client_storage.get('S3_ACCESS'),
-            secret_key=self.page.client_storage.get('S3_SECRET'),
-            endpoint=self.page.client_storage.get('S3_ENDPOINT'),
-            bucket=self.page.client_storage.get('S3_BUCKET'),
-        )
+
+        self.s3 = None
 
         self.pick_files_dialog = ft.FilePicker(on_result=self.pick_files_result)
         page.overlay.append(self.pick_files_dialog)
@@ -46,14 +43,14 @@ class GalleryPage(ft.Container):
                 print(e)
 
     def on_load(self):
+        self.s3 = S3Api(self.page)
         is_connect = self.s3.bucket_list()
-        print("TEST:", is_connect)
         if is_connect['success'] is False:
             ErrorDialog(self.page, title="S3 Connection Error", message=is_connect['message']).show_dialog()
             return
         images_list = self.s3.list()
         for image in images_list:
-            url = f'http://192.168.88.20:9000/{self.page.client_storage.get("S3_BUCKET")}/{image["Key"]}'
+            url = f'http://192.168.88.20:9000/{self.s3.s3_bucket_name}/{image["Key"]}'
             self.images.controls.append(
                 ft.Container(
                     content=ft.Image(
