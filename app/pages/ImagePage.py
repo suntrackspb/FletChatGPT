@@ -20,7 +20,13 @@ class ImagePage(ft.Column):
         self.secret = self.page.client_storage.get('IMG_SECRET')
         self.api = Text2ImageAPI(url=self.url, api_key=self.key, secret_key=self.secret)
 
-        self.s3 = S3Api()
+        self.s3 = S3Api(
+            region=self.page.client_storage.get('S3_REGION'),
+            access_key=self.page.client_storage.get('S3_ACCESS'),
+            secret_key=self.page.client_storage.get('S3_SECRET'),
+            endpoint=self.page.client_storage.get('S3_ENDPOINT'),
+            bucket=self.page.client_storage.get('S3_BUCKET'),
+        )
 
         self.img_prompt = ft.TextField(label="Prompt", border_color=ft.colors.PRIMARY, expand=True,
                                        on_submit=self.run_generate)

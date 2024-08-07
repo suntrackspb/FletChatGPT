@@ -11,7 +11,13 @@ class GalleryPage(ft.Column):
         super().__init__()
         self.page = page
         self.page.title = "Gallery"
-        self.s3 = S3Api()
+        self.s3 = S3Api(
+            region=self.page.client_storage.get('S3_REGION'),
+            access_key=self.page.client_storage.get('S3_ACCESS'),
+            secret_key=self.page.client_storage.get('S3_SECRET'),
+            endpoint=self.page.client_storage.get('S3_ENDPOINT'),
+            bucket=self.page.client_storage.get('S3_BUCKET'),
+        )
 
         self.pick_files_dialog = ft.FilePicker(on_result=self.pick_files_result)
         page.overlay.append(self.pick_files_dialog)
@@ -44,7 +50,7 @@ class GalleryPage(ft.Column):
     def on_load(self):
         images_list = self.s3.list()
         for image in images_list:
-            url = f'http://192.168.88.20:9000/sun-public/{image["Key"]}'
+            url = f'http://192.168.88.20:9000/{self.page.client_storage.get("S3_BUCKET")}/{image["Key"]}'
             self.images.controls.append(
                 ft.Container(
                     content=ft.Image(

@@ -16,7 +16,10 @@ class MyApp:
         page.navigation_bar = Navigation(self.page)
 
         page.appbar = ft.CupertinoAppBar(
-            leading=ft.Icon(ft.icons.GPP_MAYBE),
+            leading=ft.Image(
+                src=f"assets/icons/android-chrome-192x192.png",
+                fit=ft.ImageFit.CONTAIN,
+            ),
             bgcolor=ft.cupertino_colors.ON_PRIMARY,
             middle=ft.Text("Chat GPT by SNTRK"),
         )
@@ -33,4 +36,4 @@ def main(page: ft.Page):
 
 
 ft.app(target=main, assets_dir="assets")
-# ft.app(target=main, assets_dir="assets", view=ft.WEB_BROWSER, host='0.0.0.0', port=8009)
+# ft.app(target=main, assets_dir="assets", view=ft.WEB_BROWSER, host='127.0.0.1', port=8009)

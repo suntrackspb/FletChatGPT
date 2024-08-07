@@ -21,7 +21,7 @@ def get_destinations(mode: int):
             ft.NavigationDestination(icon=ft.icons.DEVELOPER_MODE, label="DEV")
         )
         destinations.append(
-            ft.NavigationDestination(icon=ft.icons.FILE_UPLOAD, label="logs")
+            ft.NavigationDestination(icon=ft.icons.FILE_UPLOAD, label="Logs")
         )
     return destinations
 
