@@ -45,24 +45,28 @@ class GalleryPage(ft.Container):
     def on_load(self):
         self.s3 = S3Api(self.page)
         is_connect = self.s3.bucket_list()
+        print(is_connect)
         if is_connect['success'] is False:
             ErrorDialog(self.page, title="S3 Connection Error", message=is_connect['message']).show_dialog()
             return
         images_list = self.s3.list()
+        images_extensions = {'.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff'}
         for image in images_list:
+            print(image)
             url = f'http://192.168.88.20:9000/{self.s3.s3_bucket_name}/{image["Key"]}'
-            self.images.controls.append(
-                ft.Container(
-                    content=ft.Image(
-                        src=url,
-                        fit=ft.ImageFit.FILL,
-                        repeat=ft.ImageRepeat.NO_REPEAT,
-                        border_radius=ft.border_radius.all(10),
-                    ),
-                    data=url,
-                    on_click=self.onclick_container
+            if any(image["Key"].lower().endswith(ext) for ext in images_extensions):
+                self.images.controls.append(
+                    ft.Container(
+                        content=ft.Image(
+                            src=url,
+                            fit=ft.ImageFit.FILL,
+                            repeat=ft.ImageRepeat.NO_REPEAT,
+                            border_radius=ft.border_radius.all(10),
+                        ),
+                        data=url,
+                        on_click=self.onclick_container
+                    )
                 )
-            )
         self.page.update()
 
     def onclick_container(self, e: ft.ControlEvent):
