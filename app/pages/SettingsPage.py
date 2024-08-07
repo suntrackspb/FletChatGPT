@@ -223,7 +223,7 @@ class SettingsPage(ft.Container):
             self.endpoint_url.value = config['endpoint_url']
             self.bucket.value = config['bucket']
             self.page.update()
-            print(config)
+            # print(config)
         else:
             print(f"Failed to load config. Status code: {response.status_code}")
 

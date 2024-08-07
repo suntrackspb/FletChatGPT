@@ -66,7 +66,7 @@ class Text2ImageAPI:
         while attempts > 0:
             response = requests.get(self.URL + 'key/api/v1/text2image/status/' + request_id, headers=self.AUTH_HEADERS)
             data = response.json()
-            print(data)
+            # print(data)
             if data['status'] == 'DONE':
                 return data['images']
             if data['status'] == 404:

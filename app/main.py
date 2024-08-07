@@ -1,12 +1,16 @@
+import logging
+
 import flet as ft
-from app.pages.HistoryPage import HistoryPage
-from app.pages.GenerateImage import ImagePage
-from app.pages.GalleryPage import GalleryPage
-from app.pages.SettingsPage import SettingsPage
-from app.pages.HomePage import HomePage
+
 from app.pages.DevPage import DevPage
+from app.pages.GalleryPage import GalleryPage
+from app.pages.GenerateImage import ImagePage
+from app.pages.HistoryPage import HistoryPage
+from app.pages.HomePage import HomePage
 from app.pages.LogsPage import LogsPage
-from app.pages.Test import TestPage
+from app.pages.SettingsPage import SettingsPage
+
+# logging.basicConfig(filename="flet.log", level=logging.DEBUG)
 
 
 class MyApp:
@@ -113,17 +117,25 @@ class MyApp:
             self.page.appbar.title = ft.Text("Settings")
 
         elif route.route == "/dev":
-            self.page.views.append(ft.View(route="/settings", controls=[
+            self.page.views.append(ft.View(route="/dev", controls=[
                 self.appbar,
                 DevPage(self.page).get_view(),
                 self.navigation_bar
             ], scroll=ft.ScrollMode.HIDDEN))
-            self.page.appbar.title = ft.Text("Settings")
+            self.page.appbar.title = ft.Text("Dev")
+
+        elif route.route == "/logs":
+            self.page.views.append(ft.View(route="/logs", controls=[
+                self.appbar,
+                LogsPage(self.page).get_view(),
+                self.navigation_bar
+            ], scroll=ft.ScrollMode.HIDDEN))
+            self.page.appbar.title = ft.Text("Logs")
 
         self.page.update()
 
     def nav_change(self, event):
-        routes = ["/home", "/history", "/image_gen", "/gallery", "/settings", "/dev"]
+        routes = ["/home", "/history", "/image_gen", "/gallery", "/settings", "/dev", "/logs"]
         self.page.go(routes[int(event.data)])
 
     def set_theme(self):
