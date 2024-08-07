@@ -8,8 +8,8 @@ models_list = ['gpt-4o-2024-05-13', 'gpt-4o-mini-2024-07-18', 'gpt-4-turbo-2024-
                'claude-3-opus-20240229', 'gemini-pro', 'llama-2-70b-chat']
 
 
-class SettingsPage(ft.Column):
-    def __init__(self, page, on_route_change):
+class SettingsPage(ft.Container):
+    def __init__(self, page):
         super().__init__()
         self.page = page
         self.page.title = "Settings"
@@ -45,6 +45,103 @@ class SettingsPage(ft.Column):
                 ),
             ],
         )
+
+        self.content = ft.Column(
+            controls=
+            [
+                ft.Column(
+                    [
+                        ft.Text("GPT Settings", style=ft.TextThemeStyle.TITLE_MEDIUM),
+                        ft.Row(
+                            [
+                                self.api_url,
+                            ],
+                        ),
+                        ft.Row(
+                            [
+                                self.api_key,
+                            ],
+                        ),
+                        ft.Row(
+                            [
+                                self.api_model,
+                            ],
+                        ),
+                        ft.Divider(),
+                        ft.Text("Kandinsky Settings", style=ft.TextThemeStyle.TITLE_MEDIUM),
+                        ft.Row(
+                            [
+                                self.img_key,
+                            ],
+                        ),
+                        ft.Row(
+                            [
+                                self.img_secret,
+                            ],
+                        ),
+                        ft.Divider(),
+                        ft.Text("S3 Object Storage", style=ft.TextThemeStyle.TITLE_MEDIUM),
+                        ft.Row(
+                            [
+                                self.region_name,
+                            ],
+                        ),
+                        ft.Row(
+                            [
+                                self.aws_access_key_id,
+                            ],
+                        ),
+                        ft.Row(
+                            [
+                                self.aws_secret_key,
+                            ],
+                        ),
+                        ft.Row(
+                            [
+                                self.endpoint_url,
+                            ],
+                        ),
+                        ft.Row(
+                            [
+                                self.bucket,
+                            ],
+                        ),
+                        ft.Row(
+                            [
+                                ft.ElevatedButton(text="Save", icon=ft.icons.SAVE, expand=True,
+                                                  color=ft.colors.ON_PRIMARY, bgcolor=ft.colors.PRIMARY,
+                                                  on_click=self.on_click_save),
+                                ft.ElevatedButton(text="Load", icon=ft.icons.CLOUD, expand=True,
+                                                  color=ft.colors.ON_PRIMARY, bgcolor=ft.colors.PRIMARY,
+                                                  on_click=self.load_config_from_url),
+                                ft.ElevatedButton(text="Reset", icon=ft.icons.CANCEL, expand=True,
+                                                  color=ft.colors.ON_PRIMARY, bgcolor=ft.colors.PRIMARY,
+                                                  on_click=self.on_click_reset),
+                            ],
+                        ),
+                        ft.Divider(),
+                        ft.Row(
+                            [
+                                ft.Column(
+                                    [
+                                        self.c,
+                                    ]
+                                ),
+                                ft.Column(
+                                    [
+                                        self.dev_switch
+                                    ]
+                                ),
+                            ],
+                        ),
+                    ],
+                ),
+            ],
+            scroll=ft.ScrollMode.HIDDEN,
+            expand=True,
+            alignment=ft.MainAxisAlignment.END
+        )
+
         self.on_load()
 
     def on_load(self):
@@ -145,100 +242,3 @@ class SettingsPage(ft.Column):
         )
         self.page.navigation_bar.update()
         self.page.update()
-
-    def get_view(self):
-        return ft.Column(
-            controls=
-            [
-                ft.Column(
-                    [
-                        ft.Text("GPT Settings", style=ft.TextThemeStyle.TITLE_MEDIUM),
-                        ft.Row(
-                            [
-                                self.api_url,
-                            ],
-                        ),
-                        ft.Row(
-                            [
-                                self.api_key,
-                            ],
-                        ),
-                        ft.Row(
-                            [
-                                self.api_model,
-                            ],
-                        ),
-                        ft.Divider(),
-                        ft.Text("Kandinsky Settings", style=ft.TextThemeStyle.TITLE_MEDIUM),
-                        ft.Row(
-                            [
-                                self.img_key,
-                            ],
-                        ),
-                        ft.Row(
-                            [
-                                self.img_secret,
-                            ],
-                        ),
-                        ft.Divider(),
-                        ft.Text("S3 Object Storage", style=ft.TextThemeStyle.TITLE_MEDIUM),
-                        ft.Row(
-                            [
-                                self.region_name,
-                            ],
-                        ),
-                        ft.Row(
-                            [
-                                self.aws_access_key_id,
-                            ],
-                        ),
-                        ft.Row(
-                            [
-                                self.aws_secret_key,
-                            ],
-                        ),
-                        ft.Row(
-                            [
-                                self.endpoint_url,
-                            ],
-                        ),
-                        ft.Row(
-                            [
-                                self.bucket,
-                            ],
-                        ),
-                        ft.Row(
-                            [
-                                ft.ElevatedButton(text="Save", icon=ft.icons.SAVE, expand=True,
-                                                  color=ft.colors.ON_PRIMARY, bgcolor=ft.colors.PRIMARY,
-                                                  on_click=self.on_click_save),
-                                ft.ElevatedButton(text="Load", icon=ft.icons.CLOUD, expand=True,
-                                                  color=ft.colors.ON_PRIMARY, bgcolor=ft.colors.PRIMARY,
-                                                  on_click=self.load_config_from_url),
-                                ft.ElevatedButton(text="Reset", icon=ft.icons.CANCEL, expand=True,
-                                                  color=ft.colors.ON_PRIMARY, bgcolor=ft.colors.PRIMARY,
-                                                  on_click=self.on_click_reset),
-                            ],
-                        ),
-                        ft.Divider(),
-                        ft.Row(
-                            [
-                                ft.Column(
-                                    [
-                                        self.c,
-                                    ]
-                                ),
-                                ft.Column(
-                                    [
-                                        self.dev_switch
-                                    ]
-                                ),
-                            ],
-                        ),
-                    ],
-                ),
-            ],
-            scroll=ft.ScrollMode.HIDDEN,
-            expand=True,
-            alignment=ft.MainAxisAlignment.END
-        )

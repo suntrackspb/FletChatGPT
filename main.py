@@ -1,28 +1,116 @@
 import flet as ft
-from app.navigation import Navigation
+from app.pages.HistoryPage import HistoryPage
+from app.pages.ImagePage import ImagePage
+from app.pages.GalleryPage import GalleryPage
+from app.pages.SettingsPage import SettingsPage
+from app.pages.HomePage import HomePage
+from app.pages.DevPage import DevPage
+from app.pages.LogsPage import LogsPage
+from app.pages.Test import TestPage
+
+
+def get_destinations(mode: int):
+    destinations = [
+        ft.NavigationBarDestination(icon=ft.icons.CHAT, label="Chat"),
+        ft.NavigationBarDestination(icon=ft.icons.HISTORY, label="History"),
+        ft.NavigationBarDestination(icon=ft.icons.PREVIEW, label="Image"),
+        ft.NavigationBarDestination(icon=ft.icons.IMAGE_SEARCH, label="Gallery"),
+        # ft.NavigationBarDestination(icon=ft.icons.SETTINGS, label="Settings"),
+    ]
+    if mode:
+        destinations.append(
+            ft.NavigationBarDestination(icon=ft.icons.DEVELOPER_MODE, label="DEV")
+        )
+        destinations.append(
+            ft.NavigationBarDestination(icon=ft.icons.FILE_UPLOAD, label="Logs")
+        )
+    return destinations
 
 
 class MyApp:
     def __init__(self, page: ft.Page):
         self.page = page
-        self.page.adaptive = True
-        self.page.title = "SNTRK GPT"
+        self.page.title = "Flet App"
         self.page.theme_mode = self.set_theme()
         self.page.theme = ft.Theme(color_scheme=ft.ColorScheme(primary=ft.colors.PRIMARY))
-        # self.page.window.resizable = False
-        self.page.window.width = 500
-        self.page.window.height = 900
-        page.vertical_alignment = ft.VerticalAlignment.END
-        page.navigation_bar = Navigation(self.page)
-
-        page.appbar = ft.CupertinoAppBar(
-            leading=ft.Image(
-                src=f"assets/icons/android-chrome-192x192.png",
-                fit=ft.ImageFit.CONTAIN,
-            ),
-            bgcolor=ft.cupertino_colors.ON_PRIMARY,
-            middle=ft.Text("Chat GPT by SNTRK"),
+        self.page.on_route_change = self.route_change
+        self.appbar = ft.AppBar(
+            actions=[
+                ft.IconButton(
+                    icon=ft.icons.SETTINGS,
+                    on_click=lambda _: page.go("/settings"),
+                    padding=10,
+                )
+                # ft.PopupMenuButton(
+                #     items=[
+                #         ft.PopupMenuItem(
+                #             text="Settings",
+                #             checked=False,
+                #             on_click=lambda _: page.go("/settings")
+                #         ),
+                #     ]
+                # )
+            ],
+            bgcolor=ft.colors.SECONDARY_CONTAINER
         )
+
+        self.navigation_bar = ft.NavigationBar(
+            destinations=get_destinations(0),
+            on_change=lambda e: self.nav_change(e),
+            bgcolor=ft.colors.SECONDARY_CONTAINER
+        )
+        self.page.appbar = self.appbar
+        self.page.navigation_bar = self.navigation_bar
+        self.page.on_view_pop = lambda e: print(e)
+        self.page.go("/home")
+
+    def route_change(self, route):
+        self.page.views.clear()
+        if route.route == "/home":
+            self.page.views.append(ft.View(route="/home", controls=[
+                self.appbar,
+                HomePage(self.page),
+                self.navigation_bar
+            ]))
+            self.page.appbar.title = ft.Text("Chat GPT")
+
+        elif route.route == "/history":
+            self.page.views.append(ft.View(route="/history", controls=[
+                self.appbar,
+                HistoryPage(self.page),
+                self.navigation_bar
+            ], scroll=ft.ScrollMode.HIDDEN))
+            self.page.appbar.title = ft.Text("Chats history")
+
+        elif route.route == "/image_gen":
+            self.page.views.append(ft.View(route="/image_gen", controls=[
+                self.appbar,
+                ImagePage(self.page),
+                self.navigation_bar
+            ]))
+            self.page.appbar.title = ft.Text("Generate Image")
+
+        elif route.route == "/gallery":
+            self.page.views.append(ft.View(route="/gallery", controls=[
+                self.appbar,
+                GalleryPage(self.page).get_view(),
+                self.navigation_bar
+            ], scroll=ft.ScrollMode.HIDDEN))
+            self.page.appbar.title = ft.Text("Images Gallery")
+
+        elif route.route == "/settings":
+            self.page.views.append(ft.View(route="/settings", controls=[
+                self.appbar,
+                SettingsPage(self.page),
+                self.navigation_bar
+            ], scroll=ft.ScrollMode.HIDDEN))
+            self.page.appbar.title = ft.Text("Settings")
+
+        self.page.update()
+
+    def nav_change(self, event):
+        routes = ["/home", "/history", "/image_gen", "/gallery", "/settings"]
+        self.page.go(routes[int(event.data)])
 
     def set_theme(self):
         if bool(self.page.client_storage.get('THEME')):
@@ -35,5 +123,5 @@ def main(page: ft.Page):
     MyApp(page)
 
 
-ft.app(target=main, assets_dir="assets")
+ft.app(target=main)
 # ft.app(target=main, assets_dir="assets", view=ft.WEB_BROWSER, host='127.0.0.1', port=8009)

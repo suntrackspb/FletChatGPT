@@ -6,8 +6,8 @@ import requests
 from app.s3_api import S3Api
 
 
-class GalleryPage(ft.Column):
-    def __init__(self, page, on_route_change):
+class GalleryPage(ft.Container):
+    def __init__(self, page):
         super().__init__()
         self.page = page
         self.page.title = "Gallery"

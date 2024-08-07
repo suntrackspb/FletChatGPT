@@ -7,8 +7,8 @@ from app.image_api import Text2ImageAPI
 from app.s3_api import S3Api
 
 
-class ImagePage(ft.Column):
-    def __init__(self, page, on_route_change):
+class ImagePage(ft.View):
+    def __init__(self, page):
         super().__init__()
         self.page = page
         self.page.title = "Image"
