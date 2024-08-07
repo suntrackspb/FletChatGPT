@@ -25,6 +25,7 @@ class HomePage(ft.Column):
         self.clear_btn = ft.IconButton(icon=ft.icons.CLEAR, icon_color=ft.colors.PRIMARY, on_click=self.on_click_clear)
         self.msg_view = ft.Column(
             # height=int(self.page.window.height - 240),
+            width=self.page.window.width,
             spacing=10,
         )
 
@@ -55,6 +56,7 @@ class HomePage(ft.Column):
                 ],
                 alignment=row,
             ),
+            alignment=ft.alignment.top_right,
             bgcolor=bg,
             border_radius=10,
             padding=ft.padding.only(left=10, right=20, top=10, bottom=10)
@@ -75,16 +77,13 @@ class HomePage(ft.Column):
         self.page.update()
 
     def on_click_search(self, e):
-        url = self.page.client_storage.get('API_URL')
-        key = self.page.client_storage.get('API_KEY')
-
         self.msg_view.controls.append(self.format_message({"role": "user", "content": self.search.value}))
         self.page.update()
 
         messages.append(
             {"role": "user", "content": self.search.value, "date": datetime.now().strftime("%d-%m-%Y %H:%M:%S")})
 
-        api = OpenAI(url=url, key=key, messages=messages)
+        api = OpenAI(page=self.page, messages=messages)
         choices = api.generate_completion()
         # print(choices)
         messages.append(choices['choices'][0]['message'])

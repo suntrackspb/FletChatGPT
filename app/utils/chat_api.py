@@ -1,19 +1,33 @@
+import os
 import urllib.request
 import urllib.parse
 import json
 from urllib.error import URLError, HTTPError
+import flet as ft
 
 
 class OpenAI:
-    def __init__(self, url: str, key: str, messages: list = None):
-        self.url = f'{url}/chat/completions'
-        self.key = key
+    def __init__(self, page: ft.Page, messages: list = None):
+        self.page = page
+        self.base_url = self.page.client_storage.get('API_URL')
+        self.api_key = self.page.client_storage.get('API_KEY')
+        self.model = self.page.client_storage.get('GPT_MODEL')
+
+        self.validate_config()
+
+        self.url = f'{self.base_url}/chat/completions'
         self.messages = messages
+
+    def validate_config(self):
+        if not bool(self.base_url) and not bool(self.api_key):
+            self.base_url = os.getenv('GPT_API_URL')
+            self.api_key = os.getenv('GPT_API_KEY')
+            self.model = os.getenv('GPT_API_MODEL')
 
     def generate_completion(self):
         headers = {
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {self.key}"
+            "Authorization": f"Bearer {self.api_key}"
         }
         data = {
             "model": "gpt-3.5-turbo",
