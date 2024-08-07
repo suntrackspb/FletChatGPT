@@ -16,12 +16,14 @@ class SettingsPage(ft.Column):
         self.api_key = ft.TextField(label="API KEY", border_color=ft.colors.PRIMARY,
                                     expand=True)
         self.api_url = ft.TextField(label="API URL", border_color=ft.colors.PRIMARY, expand=True)
+
         self.img_secret = ft.TextField(label="Fusion Brain Secret", border_color=ft.colors.PRIMARY, expand=True)
         self.img_key = ft.TextField(label="Fusion Brain Api Key", border_color=ft.colors.PRIMARY, expand=True)
+
         self.bucket = ft.TextField(label="Bucket name", border_color=ft.colors.PRIMARY, expand=True)
         self.region_name = ft.TextField(label="Region Name", border_color=ft.colors.PRIMARY, expand=True)
         self.aws_access_key_id = ft.TextField(label="Access Key Id", border_color=ft.colors.PRIMARY, expand=True)
-        self.aws_secret_access_key = ft.TextField(label="Secret Access Key", border_color=ft.colors.PRIMARY, expand=True)
+        self.aws_secret_key = ft.TextField(label="Secret Key", border_color=ft.colors.PRIMARY, expand=True)
         self.endpoint_url = ft.TextField(label="Endpoint URL", border_color=ft.colors.PRIMARY, expand=True)
         self.api_model = ft.Dropdown(
             label="Select model",
@@ -55,12 +57,24 @@ class SettingsPage(ft.Column):
         self.img_secret.value = self.page.client_storage.get('IMG_SECRET')
         self.dev_switch.value = bool(self.page.client_storage.get('DEV_MODE'))
 
+        self.region_name.value = self.page.client_storage.get('S3_REGION')
+        self.aws_access_key_id.value = self.page.client_storage.get('S3_ACCESS')
+        self.aws_secret_key.value = self.page.client_storage.get('S3_SECRET')
+        self.endpoint_url.value = self.page.client_storage.get('S3_ENDPOINT')
+        self.bucket.value = self.page.client_storage.get('S3_BUCKET')
+
     def on_click_save(self, e):
         self.page.client_storage.set('API_KEY', self.api_key.value)
         self.page.client_storage.set('API_URL', self.api_url.value)
         self.page.client_storage.set('MODEL', self.api_model.value)
         self.page.client_storage.set('IMG_KEY', self.img_key.value)
         self.page.client_storage.set('IMG_SECRET', self.img_secret.value)
+
+        self.page.client_storage.set('S3_REGION', self.region_name.value)
+        self.page.client_storage.set('S3_ACCESS', self.aws_access_key_id.value)
+        self.page.client_storage.set('S3_SECRET', self.aws_secret_key.value)
+        self.page.client_storage.set('S3_ENDPOINT', self.endpoint_url.value)
+        self.page.client_storage.set('S3_BUCKET', self.bucket.value)
         e.control.page.dialog = self.cupertino_alert_dialog
         self.cupertino_alert_dialog.open = True
         self.page.update()
@@ -71,11 +85,21 @@ class SettingsPage(ft.Column):
         self.api_model.value = ''
         self.img_key.value = ''
         self.img_secret.value = ''
+        self.region_name = ''
+        self.aws_access_key_id = ''
+        self.aws_secret_key = ''
+        self.endpoint_url = ''
+        self.bucket = ''
         self.page.client_storage.remove('API_KEY')
         self.page.client_storage.remove('API_URL')
         self.page.client_storage.remove('MODEL')
         self.page.client_storage.remove('IMG_KEY')
         self.page.client_storage.remove('IMG_SECRET')
+        self.page.client_storage.remove('S3_REGION')
+        self.page.client_storage.remove('S3_ACCESS')
+        self.page.client_storage.remove('S3_SECRET')
+        self.page.client_storage.remove('S3_ENDPOINT')
+        self.page.client_storage.remove('S3_BUCKET')
         self.page.update()
 
     def dismiss_dialog(self, e):
@@ -91,6 +115,12 @@ class SettingsPage(ft.Column):
             self.api_model.value = config['api_model']
             self.img_key.value = config['img_key']
             self.img_secret.value = config['img_secret']
+
+            self.region_name.value = config['region_name']
+            self.aws_access_key_id.value = config['aws_access_key_id']
+            self.aws_secret_key.value = config['aws_secret_access_key']
+            self.endpoint_url.value = config['endpoint_url']
+            self.bucket.value = config['bucket']
             self.page.update()
             print(config)
         else:
@@ -164,7 +194,7 @@ class SettingsPage(ft.Column):
                         ),
                         ft.Row(
                             [
-                                self.aws_secret_access_key,
+                                self.aws_secret_key,
                             ],
                         ),
                         ft.Row(
