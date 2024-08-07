@@ -2,14 +2,15 @@ import flet as ft
 from flet_core import ControlEvent
 
 
-class HistoryPage(ft.Column):
-    def __init__(self, page, on_route_change):
+class HistoryPage(ft.Container):
+    def __init__(self, page: ft.Page):
         super().__init__()
         self.page = page
         self.page.title = "History"
-        self.on_route_change = on_route_change
         self.chats = ft.Column()
+        self.content = self.chats
         self.on_load()
+
 
     def on_load(self):
         self.chats.controls.clear()
@@ -86,7 +87,3 @@ class HistoryPage(ft.Column):
     #     self.on_route_change(e)
     #     self.update()
 
-    def get_view(self):
-        return ft.Container(
-            content=self.chats
-        )
