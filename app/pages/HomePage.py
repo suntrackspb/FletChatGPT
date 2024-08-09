@@ -19,7 +19,7 @@ class HomePage(ft.Column):
             label="Message",
             border_color=ft.colors.PRIMARY,
             expand=True,
-            on_submit=self.on_click_search
+            on_submit=self.on_click_search,
         )
         self.search_btn = ft.IconButton(icon=ft.icons.SEND, icon_color=ft.colors.PRIMARY, on_click=self.on_click_search)
         self.clear_btn = ft.IconButton(icon=ft.icons.CLEAR, icon_color=ft.colors.PRIMARY, on_click=self.on_click_clear)
@@ -65,8 +65,9 @@ class HomePage(ft.Column):
     def on_load(self):
         if bool(self.page.data):
             messages = self.page.client_storage.get(self.page.data)
-            for message in messages:
-                self.msg_view.controls.append(self.format_message(message))
+            if messages is not None:
+                for message in messages:
+                    self.msg_view.controls.append(self.format_message(message))
 
     def on_click_clear(self, e):
         # for chat in self.page.client_storage.get_keys('msg'):
@@ -78,6 +79,7 @@ class HomePage(ft.Column):
 
     def on_click_search(self, e):
         self.msg_view.controls.append(self.format_message({"role": "user", "content": self.search.value}))
+        self.msg_view.controls[-1].content.controls.append(ft.ProgressRing(width=20, height=20, stroke_width=2))
         self.page.update()
 
         messages.append(
@@ -88,6 +90,7 @@ class HomePage(ft.Column):
         # print(choices)
         messages.append(choices['choices'][0]['message'])
 
+        self.msg_view.controls[-1].content.controls.pop()
         self.msg_view.controls.append(self.format_message(choices['choices'][0]['message']))
         self.search.value = ''
         self.page.update()
