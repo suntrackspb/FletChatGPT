@@ -91,7 +91,7 @@ class ImagePage(ft.Container):
         img_uid = uuid.uuid4()
 
         self.s3.put(key=f'{img_uid}.png', body=self.img_data)
-        self.img_url = f'http://192.168.88.20:9000/sun-public/{img_uid}.png'
+        self.img_url = f'http://192.168.88.20:9000/{self.s3.s3_bucket_name}/{img_uid}.png'
 
         self.container.controls.clear()
         self.container.controls.append(
