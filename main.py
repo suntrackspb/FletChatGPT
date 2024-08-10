@@ -78,22 +78,14 @@ class MyApp:
         self.page.navigation_bar = self.navigation_bar
         self.page.go("/home")
 
-    def activate_dev_mode(self):
-        self.popup_menu.items.append(self.dev_menu_btn)
-        self.popup_menu.items.append(self.is_enable_dev)
-        self.is_enable_dev = 1
-        self.page.update()
-
     def route_change(self, route):
         self.page.views.clear()
         if route.route == "/home":
-
             self.page.views.append(ft.View(route="/home", controls=[
                 self.appbar,
                 HomePage(self.page).get_view(),
                 self.navigation_bar
             ]))
-            print(self.count)
             self.page.appbar.title = ft.Text("Chat GPT")
 
         elif route.route == "/history":
@@ -151,12 +143,18 @@ class MyApp:
 
         self.page.update()
 
+    def activate_dev_mode(self):
+        self.is_enable_dev = 1
+        self.popup_menu.items.append(self.dev_menu_btn)
+        self.popup_menu.items.append(self.logs_menu_btn)
+        self.page.update()
+
     def nav_change(self, event):
         self.count += 1
         if self.count >= 10:
             print("MODE TRUE")
-            self.activate_dev_mode()
             self.count = 0
+            self.activate_dev_mode()
         routes = ["/home", "/history", "/image_gen", "/gallery", "/settings", "/dev", "/logs"]
         self.page.go(routes[int(event.data)])
 
