@@ -1,0 +1,14 @@
+services:
+  flet-app:
+    container_name: flet_gpt_chat
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    entrypoint: sh -c "python3 main.py"
+    ports:
+      - "8009:8009"
+    networks:
+      - flet_network
+    restart: always
