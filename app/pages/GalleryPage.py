@@ -49,7 +49,7 @@ class GalleryPage(ft.Container):
         images_list = self.s3.list()
         images_extensions = {'.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff'}
         for image in images_list:
-            url = f'http://192.168.88.20:9000/{self.s3.s3_bucket_name}/{image["Key"]}'
+            url = f'{self.s3.s3_endpoint_url}/{self.s3.s3_bucket_name}/{image["Key"]}'
             if any(image["Key"].lower().endswith(ext) for ext in images_extensions):
                 self.images.controls.append(
                     ft.Container(

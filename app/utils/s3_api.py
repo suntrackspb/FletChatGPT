@@ -45,6 +45,7 @@ class S3Api:
                 service_name='s3',
                 endpoint_url=os.getenv('S3_ENDPOINT_URL'),
             )
+            self.s3_endpoint_url = os.getenv('S3_ENDPOINT_URL')
             self.s3_bucket_name = os.getenv('S3_BUCKET_NAME')
             # print("SERVER SETTINGS")
 
