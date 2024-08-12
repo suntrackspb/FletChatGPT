@@ -19,10 +19,11 @@ class OpenAI:
         self.messages = messages
 
     def validate_config(self):
+        if not bool(self.model):
+            self.model = os.getenv('GPT_API_MODEL')
         if not bool(self.base_url) and not bool(self.api_key):
             self.base_url = os.getenv('GPT_API_URL')
             self.api_key = os.getenv('GPT_API_KEY')
-            self.model = os.getenv('GPT_API_MODEL')
 
     def generate_completion(self):
         headers = {
@@ -30,7 +31,7 @@ class OpenAI:
             "Authorization": f"Bearer {self.api_key}"
         }
         data = {
-            "model": "gpt-3.5-turbo",
+            "model": self.model,
             "messages": self.messages,
         }
         json_data = json.dumps(data).encode('utf-8')
