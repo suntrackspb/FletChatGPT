@@ -1,6 +1,4 @@
-# Flet Kandinsky and ChatGpt PWA 
-
-## LiveDemo: https://den.sntrk.ru/gpt
+# Flet Kandinsky and ChatGpt PWA
 
 
 ## Installation docker
