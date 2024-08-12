@@ -12,3 +12,7 @@ services:
     networks:
       - flet_network
     restart: always
+
+networks:
+  flet_network:
+    name: "flet_network"
