@@ -21,6 +21,7 @@ class HomePage(ft.Column):
             expand=True,
             on_submit=self.on_click_search,
         )
+        self.messages = []
         self.search_btn = ft.IconButton(icon=ft.icons.SEND, icon_color=ft.colors.PRIMARY, on_click=self.on_click_search)
         self.clear_btn = ft.IconButton(icon=ft.icons.CLEAR, icon_color=ft.colors.PRIMARY, on_click=self.on_click_clear)
         self.msg_view = ft.Column(
@@ -64,15 +65,15 @@ class HomePage(ft.Column):
 
     def on_load(self):
         if bool(self.page.data):
-            messages = self.page.client_storage.get(self.page.data)
-            if messages is not None:
-                for message in messages:
+            self.messages = self.page.client_storage.get(self.page.data)
+            if self.messages is not None:
+                for message in self.messages:
                     self.msg_view.controls.append(self.format_message(message))
 
     def on_click_clear(self, e):
         # for chat in self.page.client_storage.get_keys('msg'):
         #     self.page.client_storage.remove(chat)
-        messages = []
+        self.messages = []
         self.page.data = None
         self.msg_view.controls.clear()
         self.page.update()
@@ -82,20 +83,23 @@ class HomePage(ft.Column):
         self.msg_view.controls[-1].content.controls.append(ft.ProgressRing(width=20, height=20, stroke_width=2))
         self.page.update()
 
-        messages.append(
+        self.messages.append(
             {"role": "user", "content": self.search.value, "date": datetime.now().strftime("%d-%m-%Y %H:%M:%S")})
 
-        api = OpenAI(page=self.page, messages=messages)
+        api = OpenAI(page=self.page, messages=self.messages)
         choices = api.generate_completion()
-        # print(choices)
         messages.append(choices['choices'][0]['message'])
 
         self.msg_view.controls[-1].content.controls.pop()
         self.msg_view.controls.append(self.format_message(choices['choices'][0]['message']))
+        self.messages.append(choices['choices'][0]['message'])
         self.search.value = ''
         self.page.update()
         self.search.focus()
-        self.page.client_storage.set(f'msg-{chat_id}', messages)
+        if self.page.data is not None:
+            self.page.client_storage.set(self.page.data, self.messages)
+        else:
+            self.page.client_storage.set(f'msg-{chat_id}', self.messages)
 
     def get_view(self):
         return ft.Column(
