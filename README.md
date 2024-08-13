@@ -21,7 +21,7 @@ You can specify all the settings yourself in .env or fill them out in the applic
 5. ```shell 
    python main.py
    ```
-6. Open http://your_ip:8009
+6. Open [http://localhost:8009](http://localhost:8009)
 
 ## Run in docker
 
@@ -29,8 +29,7 @@ You can specify all the settings yourself in .env or fill them out in the applic
 2. ```shell
    cd FletChatGPT
    ```
-
 3. ```shell
    docker compose up -d
    ```
-4. Open http://your_ip:8009
+4. Open [http://your-ip-address:8009](http://your-ip-address:8009)
