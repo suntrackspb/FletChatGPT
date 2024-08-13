@@ -1,2 +1,6 @@
 README.md
 .gitignore
+.venv
+.env.example
+docker-compose-demo.yml
+flet.log
