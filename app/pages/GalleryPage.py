@@ -18,9 +18,8 @@ class GalleryPage(ft.Container):
 
         self.current_image = ''
 
-        self.dlg = ft.AlertDialog(
-            on_dismiss=lambda e: print("Dialog dismissed!"),
-        )
+        self.dlg = ft.AlertDialog()
+
         self.images = ft.GridView(
             # height=self.page.window.height,
             # width=self.page.window.width,
@@ -76,6 +75,25 @@ class GalleryPage(ft.Container):
                     repeat=ft.ImageRepeat.NO_REPEAT,
                     border_radius=ft.border_radius.all(10),
                 ),
+            ],
+            expand=True
+        )
+        if self.page.platform in [ft.PagePlatform.IOS, ft.PagePlatform.ANDROID]:
+            self.dlg.content.controls.append(
+                ft.IconButton(
+                    icon=ft.icons.OPEN_IN_NEW,
+                    bottom=10,
+                    right=10,
+                    icon_color=ft.colors.ON_PRIMARY,
+                    hover_color=ft.colors.SECONDARY,
+                    bgcolor=ft.colors.ON_PRIMARY_CONTAINER,
+                    opacity=0.7,
+                    on_click=lambda _: self.open_url(e.control.content.src)
+
+                )
+            )
+        else:
+            self.dlg.content.controls.append(
                 ft.IconButton(
                     icon=ft.icons.DOWNLOAD,
                     bottom=10,
@@ -90,12 +108,18 @@ class GalleryPage(ft.Container):
                     ),
 
                 )
-            ],
-            expand=True
-        )
-        e.control.page.dialog = self.dlg
+            )
+
+        self.page.overlay.append(self.dlg)
         self.dlg.open = True
         self.page.update()
+
+    def open_url(self, url: str):
+        self.page.launch_url(
+            url=url,
+            web_window_name=ft.UrlTarget.SELF.value,
+            web_popup_window=True
+        )
 
     def get_view(self):
         return ft.Container(
