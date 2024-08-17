@@ -78,48 +78,39 @@ class GalleryPage(ft.Container):
             ],
             expand=True
         )
-        if self.page.platform in [ft.PagePlatform.IOS, ft.PagePlatform.ANDROID]:
-            self.dlg.content.controls.append(
-                ft.IconButton(
-                    icon=ft.icons.OPEN_IN_NEW,
-                    bottom=10,
-                    right=10,
-                    icon_color=ft.colors.ON_PRIMARY,
-                    hover_color=ft.colors.SECONDARY,
-                    bgcolor=ft.colors.ON_PRIMARY_CONTAINER,
-                    opacity=0.7,
-                    on_click=lambda _: self.open_url(e.control.content.src)
 
-                )
-            )
-        else:
-            self.dlg.content.controls.append(
-                ft.IconButton(
-                    icon=ft.icons.DOWNLOAD,
-                    bottom=10,
-                    right=10,
-                    icon_color=ft.colors.ON_PRIMARY,
-                    hover_color=ft.colors.SECONDARY,
-                    bgcolor=ft.colors.ON_PRIMARY_CONTAINER,
-                    opacity=0.7,
-                    on_click=lambda _: self.pick_files_dialog.save_file(
-                        file_name=image_name,
-                        file_type=ft.FilePickerFileType.IMAGE
-                    ),
+        self.dlg.content.controls.append(
+            ft.IconButton(
+                icon=ft.icons.OPEN_IN_NEW,
+                bottom=10,
+                right=10,
+                icon_color=ft.colors.ON_PRIMARY,
+                hover_color=ft.colors.SECONDARY,
+                bgcolor=ft.colors.ON_PRIMARY_CONTAINER,
+                opacity=0.7,
+                on_click=lambda _: self.open_url(e.control.content.src)
 
-                )
             )
+        )
 
         self.page.overlay.append(self.dlg)
+        # self.page.dialog = self.dlg
         self.dlg.open = True
         self.page.update()
 
     def open_url(self, url: str):
-        self.page.launch_url(
-            url=url,
-            web_window_name=ft.UrlTarget.SELF.value,
-            web_popup_window=True
-        )
+        if self.page.platform in [ft.PagePlatform.IOS, ft.PagePlatform.ANDROID]:
+            self.page.launch_url(
+                url=url,
+                web_window_name=ft.UrlTarget.SELF.value,
+                web_popup_window=True
+            )
+        else:
+            self.page.launch_url(
+                url=url,
+                web_window_name=ft.UrlTarget.BLANK.value,
+                web_popup_window=True
+            )
 
     def get_view(self):
         return ft.Container(
