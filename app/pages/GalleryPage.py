@@ -18,7 +18,9 @@ class GalleryPage(ft.Container):
 
         self.current_image = ''
 
-        self.dlg = ft.AlertDialog()
+        self.dlg = ft.AlertDialog(
+            on_dismiss=lambda _: self.page.overlay.clear()
+        )
 
         self.images = ft.GridView(
             # height=self.page.window.height,

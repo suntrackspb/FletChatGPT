@@ -102,10 +102,7 @@ class ImagePage(ft.Container):
                             [
                                 ft.ElevatedButton(text="Save", icon=ft.icons.SAVE, expand=True,
                                                   color=ft.colors.ON_PRIMARY, bgcolor=ft.colors.PRIMARY,
-                                                  on_click=lambda _: self.pick_files_dialog.save_file(
-                                                      file_name=f"{img_uid}.png",
-                                                      file_type=ft.FilePickerFileType.IMAGE
-                                                  ), ),
+                                                  on_click=lambda _: self.open_image(_, self.img_url)),
                                 ft.ElevatedButton(text="Reset", icon=ft.icons.CANCEL, expand=True,
                                                   color=ft.colors.ON_PRIMARY, bgcolor=ft.colors.PRIMARY,
                                                   on_click=lambda _: self.delete_image(filename=f"{img_uid}.png")),
@@ -122,6 +119,26 @@ class ImagePage(ft.Container):
             )
         )
         self.page.update()
+
+    def open_image(self, e, url):
+        if self.page.platform in [ft.PagePlatform.IOS, ft.PagePlatform.ANDROID]:
+            self.page.launch_url(
+                url=url,
+                web_window_name=ft.UrlTarget.SELF.value,
+                web_popup_window=True
+            )
+        else:
+            self.page.launch_url(
+                url=url,
+                web_window_name=ft.UrlTarget.BLANK.value,
+                web_popup_window=True
+            )
+
+    def save_image(self, e, img_uid):
+        self.pick_files_dialog.save_file(
+            file_name=f"{img_uid}.png",
+            file_type=ft.FilePickerFileType.IMAGE
+        )
 
     def delete_image(self, filename):
         self.s3.delete(key=filename)
