@@ -1,13 +1,30 @@
+import logging
 import os
 import urllib.request
 import urllib.parse
 import json
 from urllib.error import URLError, HTTPError
 import flet as ft
+from typing import List, Optional, Dict, Any
 
 
 class OpenAI:
-    def __init__(self, page: ft.Page, messages: list = None):
+    """
+    A class to interact with the OpenAI API for generating chat completions.
+
+    Attributes:
+        page (ft.Page): The page object containing client storage.
+        messages (List[Dict[str, str]]): A list of message dictionaries for the chat model.
+    """
+
+    def __init__(self, page: ft.Page, messages: Optional[List[Dict[str, str]]] = None):
+        """
+        Initializes the OpenAI object with the given page and messages.
+
+        Args:
+            page (ft.Page): The page object containing client storage.
+            messages (Optional[List[Dict[str, str]]]): A list of message dictionaries for the chat model.
+        """
         self.page = page
         self.base_url = self.page.client_storage.get('API_URL')
         self.api_key = self.page.client_storage.get('API_KEY')
@@ -16,16 +33,26 @@ class OpenAI:
         self.validate_config()
 
         self.url = f'{self.base_url}/chat/completions'
-        self.messages = messages
+        self.messages = messages if messages is not None else []
 
-    def validate_config(self):
-        if not bool(self.model):
+    def validate_config(self) -> None:
+        """
+        Validates and sets the configuration for the API URL, API key, and model.
+        """
+        if not self.model:
             self.model = os.getenv('GPT_API_MODEL')
-        if not bool(self.base_url) and not bool(self.api_key):
+        if not self.base_url:
             self.base_url = os.getenv('GPT_API_URL')
+        if not self.api_key:
             self.api_key = os.getenv('GPT_API_KEY')
 
-    def generate_completion(self):
+    def generate_completion(self) -> Dict[str, Any]:
+        """
+        Generates a chat completion using the OpenAI API.
+
+        Returns:
+            Dict[str, Any]: The response from the API, containing either the result or an error message.
+        """
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self.api_key}"
@@ -34,6 +61,9 @@ class OpenAI:
             "model": self.model,
             "messages": self.messages,
         }
+
+        logging.info(f'[CLIENT]: Client connect from IP: {json.dumps(data, ensure_ascii=False)}')
+
         json_data = json.dumps(data).encode('utf-8')
         req = urllib.request.Request(self.url, data=json_data, headers=headers, method='POST')
 
@@ -47,3 +77,4 @@ class OpenAI:
             return {"error": e.read().decode('utf-8')}
         except URLError as e:
             return {"error": str(e)}
+
