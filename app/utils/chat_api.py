@@ -1,11 +1,12 @@
+import json
 import logging
 import os
-import urllib.request
 import urllib.parse
-import json
-from urllib.error import URLError, HTTPError
-import flet as ft
+import urllib.request
 from typing import List, Optional, Dict, Any
+from urllib.error import URLError, HTTPError
+
+import flet as ft
 
 
 class OpenAI:
