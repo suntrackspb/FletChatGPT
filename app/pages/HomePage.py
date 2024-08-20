@@ -26,7 +26,7 @@ class HomePage(ft.Column):
         self.clear_btn = ft.IconButton(icon=ft.icons.CLEAR, icon_color=ft.colors.PRIMARY, on_click=self.on_click_clear)
         self.msg_view = ft.Column(
             # height=int(self.page.window.height - 240),
-            width=self.page.window.width,
+            # width=self.page.window.width,
             spacing=10,
         )
 
@@ -53,6 +53,7 @@ class HomePage(ft.Column):
                         extension_set=ft.MarkdownExtensionSet.GITHUB_WEB,
                         code_style=ft.TextStyle(font_family="Roboto Mono"),
                         width=(self.page.window.width / 3) * 2,
+                        expand=True
                     )
                 ],
                 alignment=row,

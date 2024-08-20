@@ -1,3 +1,5 @@
+import logging
+
 import flet as ft
 import requests
 
@@ -94,7 +96,7 @@ class GalleryPage(ft.Container):
 
             )
         )
-
+        logging.info(f'[CLIENT]: Open image: {e.control.content.src}')
         self.page.overlay.append(self.dlg)
         # self.page.dialog = self.dlg
         self.dlg.open = True

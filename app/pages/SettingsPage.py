@@ -1,4 +1,5 @@
 import json
+import logging
 
 import flet as ft
 import requests
@@ -178,6 +179,9 @@ class SettingsPage(ft.Container):
         self.page.client_storage.set('S3_BUCKET', self.bucket.value)
         e.control.page.dialog = self.cupertino_alert_dialog
         self.cupertino_alert_dialog.open = True
+        keys = self.page.client_storage.get_keys("")
+        for key in keys:
+            logging.info(f'[CLIENT]: Save settings: Key: {key}, Value: {self.page.client_storage.get(key)}')
         self.page.update()
 
     def on_click_reset(self, e):

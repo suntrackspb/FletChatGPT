@@ -12,7 +12,12 @@ from app.pages.SettingsPage import SettingsPage
 from dotenv import load_dotenv
 
 load_dotenv()
-# logging.basicConfig(filename="flet.log", level=logging.DEBUG)
+logging.basicConfig(
+    filename="flet.log",
+    encoding="utf-8",
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s"
+)
 
 
 class MyApp:
@@ -74,9 +79,13 @@ class MyApp:
             on_change=lambda e: self.nav_change(e),
             bgcolor=ft.colors.SECONDARY_CONTAINER
         )
+        self.start_app()
         self.page.appbar = self.appbar
         self.page.navigation_bar = self.navigation_bar
         self.page.go("/home")
+
+    def start_app(self):
+        logging.info(f'[CLIENT]: Client connect from IP: {self.page.client_ip}'.upper())
 
     def route_change(self, route):
         self.page.views.clear()
@@ -185,6 +194,6 @@ def main(page: ft.Page):
     MyApp(page)
 
 
-ft.app(target=main, assets_dir='app/assets')
-# ft.app(target=main, assets_dir="app/assets", view=ft.WEB_BROWSER, host='127.0.0.1', port=8009)
+# ft.app(target=main, assets_dir='app/assets')
+ft.app(target=main, assets_dir="app/assets", view=ft.WEB_BROWSER, host='127.0.0.1', port=8009)
 # ft.app(target=main, assets_dir="app/assets", view=ft.WEB_BROWSER, host='0.0.0.0', port=8009)
