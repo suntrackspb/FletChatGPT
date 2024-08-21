@@ -70,7 +70,6 @@ class GalleryPage(ft.Container):
 
     def onclick_container(self, e: ft.ControlEvent):
         self.current_image = e.control.data
-        image_name = e.control.data.split("/")[-1]
         self.dlg.content = ft.Stack(
             controls=[
                 ft.Image(
