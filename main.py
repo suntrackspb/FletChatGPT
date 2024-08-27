@@ -1,4 +1,5 @@
 import logging
+import os
 
 import flet as ft
 
@@ -159,7 +160,8 @@ class MyApp:
         self.page.update()
 
     def nav_change(self, event):
-        self.count += 1
+        if int(os.getenv("FLET_DEBUG")):
+            self.count += 1
         if self.count >= 10:
             print("MODE TRUE")
             self.count = 0
