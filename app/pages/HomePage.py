@@ -22,8 +22,19 @@ class HomePage(ft.Column):
             on_submit=self.on_click_search,
         )
         self.messages = []
-        self.search_btn = ft.IconButton(icon=ft.icons.SEND, icon_color=ft.colors.PRIMARY, on_click=self.on_click_search)
-        self.clear_btn = ft.IconButton(icon=ft.icons.CLEAR, icon_color=ft.colors.PRIMARY, on_click=self.on_click_clear)
+        self.search_btn = ft.IconButton(
+            icon=ft.icons.SEND,
+            icon_color=ft.colors.PRIMARY,
+            on_click=self.on_click_search,
+            tooltip="Send message"
+        )
+        self.clear_btn = ft.IconButton(
+            icon=ft.icons.CLEAR,
+            icon_color=ft.colors.PRIMARY,
+            on_click=self.on_click_clear,
+            tooltip="Clear chat"
+
+        )
         self.msg_view = ft.Column(
             # height=int(self.page.window.height - 240),
             # width=self.page.window.width,
