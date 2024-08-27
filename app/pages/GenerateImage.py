@@ -1,4 +1,5 @@
 import base64
+import json
 import uuid
 
 import flet as ft
@@ -26,6 +27,7 @@ class ImagePage(ft.Container):
             border_color=ft.colors.PRIMARY,
             expand=True,
             options=[],
+
         )
         self.generate_btn = ft.ElevatedButton(
             text="Generate",
@@ -45,10 +47,36 @@ class ImagePage(ft.Container):
         self.on_load()
 
     def on_load(self):
-        models = self.api.get_styles()
-        self.img_model.value = models[0]
-        for model in models:
-            self.img_model.options.append(ft.dropdown.Option(model))
+        with open('app/assets/kandinsky_styles.json', 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        self.img_model.value = data[0]['style']
+        for style in data:
+            self.img_model.options.append(
+                ft.dropdown.Option(
+                    key=style['style'],
+                    content=ft.Stack(
+                        [
+                            ft.Image(src=style['image_url'], width=260),
+                            ft.Text(
+                                value=style['title'],
+                                color=ft.colors.WHITE,
+                                bottom=5,
+                                left=5,
+                                style=ft.TextStyle(
+                                    shadow=ft.BoxShadow(
+                                        spread_radius=1,
+                                        blur_radius=5,
+                                        color=ft.colors.BLACK,
+                                        offset=ft.Offset(0, 0),
+                                        blur_style=ft.ShadowBlurStyle.SOLID,
+                                    )
+                                )
+                            )
+                        ]
+                    ),
+                    alignment=ft.alignment.center,
+                )
+            )
 
     def pick_files_result(self, e: ft.FilePickerResultEvent):
         if e.path:
