@@ -1,0 +1,92 @@
+[
+  {
+    "image_url": "https://cdn.fusionbrain.ai/static/download/img-style-personal.png",
+    "title": "Свой стиль",
+    "style": "DEFAULT"
+  },
+  {
+    "image_url": "https://cdn.fusionbrain.ai/static/download/img-style-malevich.png",
+    "title": "Малевич",
+    "style": "MALEVICH"
+  },
+  {
+    "image_url": "https://cdn.fusionbrain.ai/static/download/img-style-pixelart.png",
+    "title": "Пиксель арт",
+    "style": "PIXEL_ART"
+  },
+  {
+    "image_url": "https://cdn.fusionbrain.ai/static/download/img-style-cyberpunk.png",
+    "title": "Киберпанк",
+    "style": "CYBERPUNK"
+  },
+  {
+    "image_url": "https://cdn.fusionbrain.ai/static/download/img-style-cartoon.png",
+    "title": "Мультфильм",
+    "style": "CARTOON"
+  },
+  {
+    "image_url": "https://cdn.fusionbrain.ai/static/download/img-style-digital-art.png",
+    "title": "Цифровая живопись",
+    "style": "DIGITALPAINTING"
+  },
+  {
+    "image_url": "https://cdn.fusionbrain.ai/static/download/img-style-oil-paint.png",
+    "title": "Картина маслом",
+    "style": "OILPAINTING"
+  },
+  {
+    "image_url": "https://cdn.fusionbrain.ai/static/download/img-style-classiсism.png",
+    "title": "Классицизм",
+    "style": "CLASSICISM"
+  },
+  {
+    "image_url": "https://cdn.fusionbrain.ai/static/download/img-style-picasso.png",
+    "title": "Пикассо",
+    "style": "PICASSO"
+  },
+  {
+    "image_url": "https://cdn.fusionbrain.ai/static/download/img-style-portrait.png",
+    "title": "Портретное фото",
+    "style": "PORTRAITPHOTO"
+  },
+  {
+    "image_url": "https://cdn.fusionbrain.ai/static/download/img-style-pencil-draw.png",
+    "title": "Рисунок карандашом",
+    "style": "PENCILDRAWING"
+  },
+  {
+    "image_url": "https://cdn.fusionbrain.ai/static/download/img-style-hohloma.png",
+    "title": "Хохлома",
+    "style": "KHOKHLOMA"
+  },
+  {
+    "image_url": "https://cdn.fusionbrain.ai/static/download/img-style-studio-photo.png",
+    "title": "Студийное фото",
+    "style": "STUDIOPHOTO"
+  },
+  {
+    "image_url": "https://cdn.fusionbrain.ai/static/download/img-style-detail-photo.png",
+    "title": "Детальное фото",
+    "style": "UHD"
+  },
+  {
+    "image_url": "https://cdn.fusionbrain.ai/static/download/img-style-aivasovsky.png",
+    "title": "Айвазовский",
+    "style": "AIVAZOVSKY"
+  },
+  {
+    "image_url": "https://cdn.fusionbrain.ai/static/download/img-style-anime.png",
+    "title": "Аниме",
+    "style": "ANIME"
+  },
+  {
+    "image_url": "https://cdn.fusionbrain.ai/static/download/img-style-3d.png",
+    "title": "3D рендер",
+    "style": "RENDER"
+  },
+  {
+    "image_url": "https://cdn.fusionbrain.ai/static/download/img-style-kandinsky.png",
+    "title": "Кандинский",
+    "style": "KANDINSKY"
+  }
+]

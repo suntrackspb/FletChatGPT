@@ -69,9 +69,9 @@ class Text2ImageAPI:
         Returns:
             List[str]: A list of style names.
         """
-        req = urllib.request.Request('https://cdn.fusionbrain.ai/static/styles/api')
-        with urllib.request.urlopen(req) as response:
-            return [x['name'] for x in json.loads(response.read())]
+        with open('styles.json', 'r', encoding='utf-8') as styles_file:
+            data = json.load(styles_file)
+            return [x['name'] for x in data]
 
     def generate(self, prompt: str, model: str, negative: str = '', images: int = 1, width: int = 1024, height: int = 1024) -> str:
         """
