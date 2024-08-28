@@ -4,10 +4,17 @@ import os
 import time
 import urllib.parse
 import urllib.request
-from typing import List, Optional
+from dataclasses import dataclass
+from typing import List, Optional, Any, Literal
 
 import flet as ft
 import requests
+
+
+@dataclass
+class ImageData:
+    status: Literal['DONE', 'ERROR', 'CENSORED']
+    image: List[str] | None = None
 
 
 class Text2ImageAPI:
@@ -65,21 +72,29 @@ class Text2ImageAPI:
     def get_styles() -> List[str]:
         """
         Retrieves available styles from the API.
-
         Returns:
             List[str]: A list of style names.
         """
-        with open('styles.json', 'r', encoding='utf-8') as styles_file:
-            data = json.load(styles_file)
-            return [x['name'] for x in data]
+        req = urllib.request.Request('https://cdn.fusionbrain.ai/static/styles/api')
+        with urllib.request.urlopen(req) as response:
+            return [x['name'] for x in json.loads(response.read())]
 
-    def generate(self, prompt: str, model: str, negative: str = '', images: int = 1, width: int = 1024, height: int = 1024) -> str:
+    @staticmethod
+    def get_local_styles() -> List[dict]:
+        with open('app/assets/kandinsky_styles.json', 'r', encoding='utf-8') as f:
+            return json.load(f)
+
+    def generate(
+            self, prompt: str, model: str, style: str, negative: str = '',
+            images: int = 1, width: int = 1024, height: int = 1024
+    ) -> str:
         """
         Generates an image based on a text prompt.
 
         Args:
             prompt (str): The text prompt for image generation.
             model (str): The model ID to use.
+            style (str): The style to use.
             negative (str, optional): Negative prompt. Defaults to ''.
             images (int, optional): Number of images to generate. Defaults to 1.
             width (int, optional): Width of the image. Defaults to 1024.
@@ -91,6 +106,7 @@ class Text2ImageAPI:
         params = {
             "type": "GENERATE",
             "numImages": images,
+            "style": style,
             "width": width,
             "height": height,
             "negativePromptUnclip": negative,
@@ -110,12 +126,13 @@ class Text2ImageAPI:
         data = response.json()
         return data['uuid']
 
-    def check_generation(self, request_id: str, attempts: int = 10, delay: int = 10) -> Optional[List[str]]:
+    def check_generation(self, request_id: str, counter: ft.Text, attempts: int = 10, delay: int = 10) -> ImageData:
         """
         Checks the status of an image generation request.
 
         Args:
             request_id (str): The UUID of the request.
+            counter (ft.Page): Flet page for control view
             attempts (int, optional): Number of attempts to check status. Defaults to 10.
             delay (int, optional): Delay between attempts in seconds. Defaults to 10.
 
@@ -125,10 +142,25 @@ class Text2ImageAPI:
         while attempts > 0:
             response = requests.get(self.URL + 'key/api/v1/text2image/status/' + request_id, headers=self.AUTH_HEADERS)
             data = response.json()
+            print(data)
+            if data['censored']:
+                return ImageData(
+                    status='CENSORED',
+                    image=None
+                )
             if data['status'] == 'DONE':
-                return data['images']
+                return ImageData(
+                    status='DONE',
+                    image=data['images'],
+                )
             if data['status'] == 404:
-                return None
+                return ImageData(
+                    status='ERROR',
+                    image=None,
+                )
+            if data['status'] == 'INITIAL':
+                counter.value = f"Try: {attempts} / 10"
+                counter.update()
 
             attempts -= 1
             time.sleep(delay)
