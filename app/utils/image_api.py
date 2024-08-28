@@ -122,6 +122,8 @@ class Text2ImageAPI:
             'params': (None, json.dumps(params), 'application/json')
         }
 
+        print(prompt, style, negative)
+
         response = requests.post(self.URL + 'key/api/v1/text2image/run', headers=self.AUTH_HEADERS, files=data)
         data = response.json()
         return data['uuid']
@@ -146,7 +148,7 @@ class Text2ImageAPI:
             if data['censored']:
                 return ImageData(
                     status='CENSORED',
-                    image=None
+                    image=data['images']
                 )
             if data['status'] == 'DONE':
                 return ImageData(

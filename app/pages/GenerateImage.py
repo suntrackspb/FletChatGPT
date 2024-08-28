@@ -42,6 +42,17 @@ class ImagePage(ft.Container):
             expand=True,
             scroll=ft.ScrollMode.ALWAYS,
         )
+
+        self.loader = ft.Row(
+                [
+                    ft.ProgressRing(width=32, height=32, stroke_width=4),
+                    self.retry_count,
+                ],
+                height=self.page.window.height / 2,
+                vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                alignment=ft.MainAxisAlignment.CENTER
+            )
+
         self.pick_files_dialog = ft.FilePicker(on_result=self.pick_files_result)
 
         page.overlay.append(self.pick_files_dialog)
@@ -103,16 +114,7 @@ class ImagePage(ft.Container):
         self.img_negative.value = ''
 
         self.container.controls.append(
-            ft.Row(
-                [
-                    ft.ProgressRing(width=32, height=32, stroke_width=4),
-                    self.retry_count,
-                ],
-                height=self.page.window.height / 2,
-                vertical_alignment=ft.CrossAxisAlignment.CENTER,
-                alignment=ft.MainAxisAlignment.CENTER
-            )
-
+            self.loader
         )
         self.page.update()
 
@@ -124,7 +126,9 @@ class ImagePage(ft.Container):
             ErrorDialog(self.page, title="Generation Error", message="Image request not found").show_dialog()
 
         if response.status == 'CENSORED':
-            ErrorDialog(self.page, title="Generation Error", message="The image did not pass censorship filters").show_dialog()
+            ErrorDialog(self.page, title="Generation Error",
+                        message="The image did not pass censorship filters").show_dialog()
+            self.img_data = base64.b64decode(response.image[0])
 
         img_uid = uuid.uuid4()
 
