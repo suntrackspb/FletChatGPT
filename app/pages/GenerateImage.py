@@ -4,6 +4,7 @@ import uuid
 
 import flet as ft
 
+from app.components.ErrorDialog import ErrorDialog
 from app.utils.image_api import Text2ImageAPI
 from app.utils.s3_api import S3Api
 
@@ -22,13 +23,14 @@ class ImagePage(ft.Container):
                                        on_submit=self.run_generate)
         self.img_negative = ft.TextField(label="Negative Prompt", border_color=ft.colors.PRIMARY, expand=True,
                                          on_submit=self.run_generate)
-        self.img_model = ft.Dropdown(
+        self.select_style = ft.Dropdown(
             label="Select style",
             border_color=ft.colors.PRIMARY,
             expand=True,
             options=[],
 
         )
+        self.retry_count = ft.Text("Try: 1 / 10")
         self.generate_btn = ft.ElevatedButton(
             text="Generate",
             icon=ft.icons.GENERATING_TOKENS,
@@ -47,11 +49,10 @@ class ImagePage(ft.Container):
         self.on_load()
 
     def on_load(self):
-        with open('app/assets/kandinsky_styles.json', 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        self.img_model.value = data[0]['style']
+        data = self.api.get_local_styles()
+        self.select_style.value = data[0]['style']
         for style in data:
-            self.img_model.options.append(
+            self.select_style.options.append(
                 ft.dropdown.Option(
                     key=style['style'],
                     content=ft.Stack(
@@ -94,6 +95,7 @@ class ImagePage(ft.Container):
         req_id = self.api.generate(
             prompt=self.img_prompt.value,
             model=self.api.get_model(),
+            style=self.select_style.value,
             negative=self.img_negative.value,
         )
 
@@ -103,7 +105,8 @@ class ImagePage(ft.Container):
         self.container.controls.append(
             ft.Row(
                 [
-                    ft.ProgressRing(width=32, height=32, stroke_width=4)
+                    ft.ProgressRing(width=32, height=32, stroke_width=4),
+                    self.retry_count,
                 ],
                 height=self.page.window.height / 2,
                 vertical_alignment=ft.CrossAxisAlignment.CENTER,
@@ -113,8 +116,15 @@ class ImagePage(ft.Container):
         )
         self.page.update()
 
-        base64_image_data = self.api.check_generation(req_id)
-        self.img_data = base64.b64decode(base64_image_data[0])
+        response = self.api.check_generation(req_id, self.retry_count)
+        if response.status == 'DONE':
+            self.img_data = base64.b64decode(response.image[0])
+
+        if response.status == 'ERROR':
+            ErrorDialog(self.page, title="Generation Error", message="Image request not found").show_dialog()
+
+        if response.status == 'CENSORED':
+            ErrorDialog(self.page, title="Generation Error", message="The image did not pass censorship filters").show_dialog()
 
         img_uid = uuid.uuid4()
 
@@ -189,7 +199,7 @@ class ImagePage(ft.Container):
                     ),
                     ft.Row(
                         [
-                            self.img_model,
+                            self.select_style,
                             self.generate_btn,
                         ],
                     ),
